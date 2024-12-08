@@ -6,9 +6,9 @@ public class ForgetPassword {
     public ForgetPassword(JFrame forgetPassFrame) {
         forgetPassFrame.getContentPane().removeAll();
 
-        JLabel emaillbl = new JLabel("Email:");
-        emaillbl.setBounds(110, 150, 100, 40);
-        emaillbl.setFont(new Font("Email", Font.BOLD, 15));
+        JLabel numberlbl = new JLabel("Number:");
+        numberlbl.setBounds(110, 150, 100, 40);
+        numberlbl.setFont(new Font("Number", Font.BOLD, 15));
 
         JTextField emailtext = new JTextField();
         emailtext.setBounds(200, 150, 220, 40);
@@ -31,19 +31,24 @@ public class ForgetPassword {
         resetbtn.setBounds(210, 350, 150, 40);
         resetbtn.addActionListener(e -> {
             if(emailtext.getText().isEmpty()){
-            JOptionPane.showMessageDialog(forgetPassFrame, "You must enter the email");
+            JOptionPane.showMessageDialog(forgetPassFrame, "You must enter the number");
             }else{
-            String password = new String(passwordtext.getPassword());
-            String password2 = new String(passwordtext2.getPassword());
-
-            if (password.equals(password2)) {
+                String password = new String(passwordtext.getPassword());
+                String password2 = new String(passwordtext2.getPassword());
+                if(password.length()==0||!password.equals(password2)){
+                JOptionPane.showMessageDialog(forgetPassFrame, "Passwords do not match. Please try again.");
+                }else{
+                if (password.equals(password2)) {
                 JOptionPane.showMessageDialog(forgetPassFrame, "Password has been reset");
-                new LogIn(forgetPassFrame); // Giriş ekranına geri döner
+                new LogIn(forgetPassFrame); 
                 forgetPassFrame.revalidate();
                 forgetPassFrame.repaint();
             } else {
                 JOptionPane.showMessageDialog(forgetPassFrame, "Passwords do not match. Please try again.");
-            }
+            }}
+            
+
+            
             }
             
         });
@@ -69,7 +74,7 @@ public class ForgetPassword {
         forgetPassFrame.add(passwordlbl);
         forgetPassFrame.add(passwordtext);
         forgetPassFrame.add(emailtext);
-        forgetPassFrame.add(emaillbl);
+        forgetPassFrame.add(numberlbl);
 
         forgetPassFrame.revalidate();
         forgetPassFrame.repaint();

@@ -26,9 +26,9 @@ public class SignUp {
         logInlbl.setFont(new Font("SignUp", Font.BOLD, 25));
         logInlbl.setBounds(255, 80, 120, 50);
 
-        JLabel emaillbl = new JLabel("Email:");
-        emaillbl.setBounds(110, 150, 100, 40);
-        emaillbl.setFont(new Font("Email", Font.BOLD, 15));
+        JLabel numberlbl = new JLabel("Number:");
+        numberlbl.setBounds(110, 150, 100, 40);
+        numberlbl.setFont(new Font("Number", Font.BOLD, 15));
 
         JTextField emailtext = new JTextField();
         emailtext.setBounds(200, 150, 220, 40);
@@ -56,7 +56,7 @@ public class SignUp {
         signUpFrame.add(passwordtext);
         signUpFrame.add(passwordlbl);
         signUpFrame.add(emailtext);
-        signUpFrame.add(emaillbl);
+        signUpFrame.add(numberlbl);
         signUpFrame.add(logInlbl);
         signUpFrame.add(backLabel);       
         signUpFrame.revalidate();
