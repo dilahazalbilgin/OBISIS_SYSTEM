@@ -67,7 +67,6 @@ public class TeacherUser {
         attendance.setBounds(15, 100, 120, 60);
         btnpanel.add(attendance);
         attendance.addActionListener(e -> {
-            // Burada absenteeism ekranı açılacak
             teacherFrame.getContentPane().removeAll();
             teacherFrame.add(btnpanel);
             String[] clas = {"P", "1", "2", "3", "4"};
@@ -98,7 +97,7 @@ public class TeacherUser {
             teacherFrame.add(attendancelbl);
 
             JCheckBox check1 = new JCheckBox("Continous");
-            check1.setBounds(300, 520, 120, 30);
+            check1.setBounds(300, 520, 100, 30);
             JCheckBox check2 = new JCheckBox("Noncontinous");
             check2.setBounds(300, 550, 120, 30);
 
@@ -112,6 +111,10 @@ public class TeacherUser {
             JButton addbtn = new JButton("Add");
             addbtn.setBounds(400, 480, 110, 30);
             teacherFrame.add(addbtn);
+            
+            JButton updatebtn = new JButton("Update");
+            updatebtn.setBounds(400, 520, 110, 30);
+            teacherFrame.add(updatebtn);
 
             teacherFrame.revalidate();
             teacherFrame.repaint();
@@ -133,7 +136,7 @@ public class TeacherUser {
             classeslbl.setBounds(350, 30, 150, 30);
             teacherFrame.add(classeslbl);
 
-            DefaultTableModel model = new DefaultTableModel(new String[]{"Number", "Name", "Surname","Lecture","Notice"}, 0);
+            DefaultTableModel model = new DefaultTableModel(new String[]{"Number", "Name", "Surname","Lecture","Note"}, 0);
             JTable noteTable = new JTable(model);
             JScrollPane noteScroll = new JScrollPane(noteTable);
             noteScroll.setBounds(180, 80, 370, 380);
@@ -156,8 +159,16 @@ public class TeacherUser {
             teacherFrame.add(noteField);
 
             JButton addbtn = new JButton("Add");
-            addbtn.setBounds(400, 530, 110, 30);
+            addbtn.setBounds(290, 530, 80, 30);
             teacherFrame.add(addbtn);
+            
+            JButton updatebtn = new JButton("Update");
+            updatebtn.setBounds(390, 530, 80, 30);
+            teacherFrame.add(updatebtn);
+            
+            JButton deletebtn = new JButton("Delete");
+            deletebtn.setBounds(490, 530, 80, 30);
+            teacherFrame.add(deletebtn);
 
             teacherFrame.revalidate();
             teacherFrame.repaint();
