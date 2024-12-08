@@ -12,18 +12,18 @@ import javax.swing.JTextField;
 
 public class LogIn {
     public LogIn(JFrame logFrame){
-    logFrame.getContentPane().removeAll();
+        logFrame.getContentPane().removeAll();
 
         JLabel logInlbl = new JLabel("LogIn");
         logInlbl.setFont(new Font("LogIn", Font.BOLD, 25));
         logInlbl.setBounds(255, 80, 120, 50);
 
-        JLabel emaillbl = new JLabel("Email:");
-        emaillbl.setBounds(110, 150, 100, 40);
-        emaillbl.setFont(new Font("Email", Font.BOLD, 15));
+        JLabel numberllbl = new JLabel("Number:");
+        numberllbl.setBounds(110, 150, 100, 40);
+        numberllbl.setFont(new Font("Number", Font.BOLD, 15));
 
-        JTextField emailtext = new JTextField();
-        emailtext.setBounds(200, 150, 220, 40);
+        JTextField numbertext = new JTextField();
+        numbertext.setBounds(200, 150, 220, 40);
 
         JLabel passwordlbl = new JLabel("Password:");
         passwordlbl.setBounds(110, 210, 100, 40);
@@ -49,18 +49,21 @@ public class LogIn {
         logInbtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                logFrame.getContentPane().removeAll();
-                if (!codetext.getText().isEmpty()) {
-                    new TeacherUser(logFrame);
+                if (numbertext.getText().isEmpty() || passwordtext.getPassword().length == 0) {
+                    JOptionPane.showMessageDialog(logFrame, "Empty number or password");
                 } else {
-                    new StudentUser(logFrame);                    
+                    logFrame.getContentPane().removeAll();
+                    if (!codetext.getText().isEmpty()) {
+                        new TeacherUser(logFrame);
+                    } else {
+                        new StudentUser(logFrame);                    
+                    }
+                    logFrame.revalidate();
+                    logFrame.repaint();
                 }
-                logFrame.revalidate();
-                logFrame.repaint();
             }
         });
 
-        
         JLabel forgotPasswordLabel = new JLabel("<html><a href=''>Forgot Password</a></html>");
         forgotPasswordLabel.setBounds(370, 400, 200, 20);
         forgotPasswordLabel.setFont(new Font("Code", Font.PLAIN, 12));
@@ -73,7 +76,7 @@ public class LogIn {
                 new ForgetPassword(logFrame);
             }
         });
-        
+
         JLabel SignUpLabel = new JLabel("<html><a href=''>If you don't have an account click!</a></html>");
         SignUpLabel.setBounds(370, 560, 250, 20);
         SignUpLabel.setFont(new Font("SignUp", Font.PLAIN, 12));
@@ -86,6 +89,7 @@ public class LogIn {
             }
         });
 
+
         logFrame.add(SignUpLabel);
         logFrame.add(forgotPasswordLabel);
         logFrame.add(logInbtn);
@@ -94,8 +98,8 @@ public class LogIn {
         logFrame.add(kodlbl);
         logFrame.add(passwordtext);
         logFrame.add(passwordlbl);
-        logFrame.add(emailtext);
-        logFrame.add(emaillbl);
+        logFrame.add(numbertext);
+        logFrame.add(numberllbl);
         logFrame.add(logInlbl);
         logFrame.revalidate();
         logFrame.repaint();
