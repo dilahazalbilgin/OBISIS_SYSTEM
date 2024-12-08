@@ -30,8 +30,8 @@ public class SignUp {
         numberlbl.setBounds(110, 150, 100, 40);
         numberlbl.setFont(new Font("Number", Font.BOLD, 15));
 
-        JTextField emailtext = new JTextField();
-        emailtext.setBounds(200, 150, 220, 40);
+        JTextField numbertext = new JTextField();
+        numbertext.setBounds(200, 150, 220, 40);
 
         JLabel passwordlbl = new JLabel("Password:");
         passwordlbl.setBounds(110, 210, 100, 40);
@@ -45,17 +45,21 @@ public class SignUp {
         registerBtn.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(numbertext.getText().isEmpty()||passwordtext.getPassword().length==0){
+                    JOptionPane.showMessageDialog(signUpFrame, "number or password is empty");
+                }else{
                 JOptionPane.showMessageDialog(signUpFrame, "Account Created");
                 new LogIn(signUpFrame); 
                 signUpFrame.revalidate(); 
-                signUpFrame.repaint();   
+                signUpFrame.repaint();
+                }     
             }
         });
 
         signUpFrame.add(registerBtn);
         signUpFrame.add(passwordtext);
         signUpFrame.add(passwordlbl);
-        signUpFrame.add(emailtext);
+        signUpFrame.add(numbertext);
         signUpFrame.add(numberlbl);
         signUpFrame.add(logInlbl);
         signUpFrame.add(backLabel);       
