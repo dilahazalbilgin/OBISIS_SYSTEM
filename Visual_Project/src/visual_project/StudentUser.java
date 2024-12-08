@@ -68,7 +68,7 @@ public class StudentUser {
                 studentFrame.revalidate();
                 studentFrame.repaint();
                 
-            DefaultTableModel model = new DefaultTableModel(new String[]{"Number", "Name", "Surname","Lecture","Notice"}, 0);
+            DefaultTableModel model = new DefaultTableModel(new String[]{"Number", "Name", "Surname","Lecture","Note"}, 0);
             JTable noteTable = new JTable(model);
             JScrollPane noteScroll = new JScrollPane(noteTable);
             noteScroll.setBounds(180, 80, 370, 380);
