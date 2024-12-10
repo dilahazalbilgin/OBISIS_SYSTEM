@@ -167,11 +167,11 @@ public class TeacherUser {
             JButton addbtn = new JButton("Add");
             addbtn.setBounds(290, 530, 80, 30);
             teacherFrame.add(addbtn);
-            addbtn.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String searchNumber = searchField.getText(); // Search field'dan numarayı al
-        String newNote = noteField.getText(); // Note field'dan notu al
+            addbtn.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String searchNumber = searchField.getText();
+        String newNote = noteField.getText();
         boolean found = false;
 
         if (searchNumber.isEmpty() || newNote.isEmpty()) {
@@ -179,12 +179,56 @@ public class TeacherUser {
             return;
         }
 
-        for (int i = 0; i < model.getRowCount(); i++) { // Tabloyu satır satır kontrol et
-            String tableNumber = model.getValueAt(i, 0).toString(); // "Number" sütununu al
-            if (tableNumber.equals(searchNumber)) { // Eğer numaralar eşleşiyorsa
+        for (int i = 0; i < model.getRowCount(); i++) { 
+            String tableNumber = model.getValueAt(i, 0).toString(); 
+            if (tableNumber.equals(searchNumber)) { 
                 found = true;
-                noteTable.setRowSelectionInterval(i, i); // Satırı seç
-                model.setValueAt(newNote, i, 4); // "Note" sütununu güncelle
+                noteTable.setRowSelectionInterval(i, i); 
+
+                // Not sıfırdan farklıysa güncelleme yapılır
+                String existingNote = model.getValueAt(i, 4).toString();
+                if (!existingNote.equals("0")) {
+                    JOptionPane.showMessageDialog(teacherFrame, 
+                        "The note is already assigned. Please use the Update button to change it.\n" +
+                        "Existing Note: " + existingNote);
+                } else {
+                    model.setValueAt(newNote, i, 4); 
+                    JOptionPane.showMessageDialog(teacherFrame, 
+                        "Note added successfully for:\nNumber: " + tableNumber +
+                        "\nName: " + model.getValueAt(i, 1) +
+                        "\nSurname: " + model.getValueAt(i, 2));
+                }
+                break;
+            }
+        }
+
+        if (!found) {
+            JOptionPane.showMessageDialog(teacherFrame, "No match found for number: " + searchNumber);
+        }
+    }
+});
+            
+            JButton updatebtn = new JButton("Update");
+            updatebtn.setBounds(390, 530, 80, 30);
+            teacherFrame.add(updatebtn);
+            updatebtn.addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                     String searchNumber = searchField.getText();
+                     String newNote = noteField.getText();
+                     boolean found = false;
+
+                     if (searchNumber.isEmpty() || newNote.isEmpty()) {
+                     JOptionPane.showMessageDialog(teacherFrame, "Please fill in both the search number and note fields.");
+                     return;
+                     }
+
+        for (int i = 0; i < model.getRowCount(); i++) { 
+            String tableNumber = model.getValueAt(i, 0).toString(); 
+            if (tableNumber.equals(searchNumber)) { 
+                found = true;
+                noteTable.setRowSelectionInterval(i, i); 
+                model.setValueAt(newNote, i, 4); 
                 JOptionPane.showMessageDialog(teacherFrame, 
                     "Note updated successfully for:\nNumber: " + tableNumber +
                     "\nName: " + model.getValueAt(i, 1) +
@@ -196,17 +240,46 @@ public class TeacherUser {
         if (!found) {
             JOptionPane.showMessageDialog(teacherFrame, "No match found for number: " + searchNumber);
         }
-                    
                 }
             });
-            
-            JButton updatebtn = new JButton("Update");
-            updatebtn.setBounds(390, 530, 80, 30);
-            teacherFrame.add(updatebtn);
             
             JButton deletebtn = new JButton("Delete");
             deletebtn.setBounds(490, 530, 80, 30);
             teacherFrame.add(deletebtn);
+            deletebtn.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String searchNumber = searchField.getText();
+        boolean found = false;
+
+        if (searchNumber.isEmpty()) {
+            JOptionPane.showMessageDialog(teacherFrame, "Please fill in the search number field.");
+            return;
+        }
+
+        for (int i = 0; i < model.getRowCount(); i++) { 
+            String tableNumber = model.getValueAt(i, 0).toString(); 
+            if (tableNumber.equals(searchNumber)) { 
+                found = true;
+                noteTable.setRowSelectionInterval(i, i); 
+
+                // Note kısmını sıfıra güncelle
+                model.setValueAt("0", i, 4);
+
+                JOptionPane.showMessageDialog(teacherFrame, 
+                    "Note reset to 0 successfully for:\nNumber: " + tableNumber +
+                    "\nName: " + model.getValueAt(i, 1) +
+                    "\nSurname: " + model.getValueAt(i, 2));
+                break;
+            }
+        }
+
+        if (!found) {
+            JOptionPane.showMessageDialog(teacherFrame, "No match found for number: " + searchNumber);
+        }
+    }
+});
+
 
             teacherFrame.revalidate();
             teacherFrame.repaint();
@@ -287,6 +360,7 @@ public class TeacherUser {
                 JScrollPane noteScroll = new JScrollPane(noteTable);
                 noteScroll.setBounds(180, 80, 370, 380);
                 teacherFrame.add(noteScroll);
+                model.addRow(new Object[]{"pzt","12.00","math"});
         teacherFrame.revalidate();
         teacherFrame.repaint();
         
