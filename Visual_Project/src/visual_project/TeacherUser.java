@@ -1,5 +1,6 @@
 package visual_project;
 
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
@@ -32,7 +33,7 @@ public class TeacherUser {
                 String pin = JOptionPane.showInputDialog(teacherFrame, "Please enter your PIN");
 
                 
-                if (pin != null && pin.equals("61")) {  // Burada 1234 bir örnektir, gerçek bir PIN kontrolü yapılabilir.
+                if (pin != null && pin.equals("61")) {  
                     JOptionPane.showMessageDialog(teacherFrame, "You can publish the announcement.");
                     JLabel notice=new JLabel("Please write a notice: ");
                     notice.setBounds(180,30,150,30);
@@ -141,6 +142,11 @@ public class TeacherUser {
             JScrollPane noteScroll = new JScrollPane(noteTable);
             noteScroll.setBounds(180, 80, 370, 380);
             teacherFrame.add(noteScroll);
+            
+            model.addRow(new Object[]{"10","Ali","Kara","Math","0"});
+            model.addRow(new Object[]{"5","Ahmet","kılıç","Math","0"});
+            model.addRow(new Object[]{"20","Ayşe","koç","Math","0"});
+            model.addRow(new Object[]{"30","Asiye","Kalan","Math","0"});
 
             JLabel searchlbl = new JLabel("Search number:");
             searchlbl.setBounds(180, 480, 150, 30);
@@ -161,6 +167,38 @@ public class TeacherUser {
             JButton addbtn = new JButton("Add");
             addbtn.setBounds(290, 530, 80, 30);
             teacherFrame.add(addbtn);
+            addbtn.addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String searchNumber = searchField.getText(); // Search field'dan numarayı al
+        String newNote = noteField.getText(); // Note field'dan notu al
+        boolean found = false;
+
+        if (searchNumber.isEmpty() || newNote.isEmpty()) {
+            JOptionPane.showMessageDialog(teacherFrame, "Please fill in both the search number and note fields.");
+            return;
+        }
+
+        for (int i = 0; i < model.getRowCount(); i++) { // Tabloyu satır satır kontrol et
+            String tableNumber = model.getValueAt(i, 0).toString(); // "Number" sütununu al
+            if (tableNumber.equals(searchNumber)) { // Eğer numaralar eşleşiyorsa
+                found = true;
+                noteTable.setRowSelectionInterval(i, i); // Satırı seç
+                model.setValueAt(newNote, i, 4); // "Note" sütununu güncelle
+                JOptionPane.showMessageDialog(teacherFrame, 
+                    "Note updated successfully for:\nNumber: " + tableNumber +
+                    "\nName: " + model.getValueAt(i, 1) +
+                    "\nSurname: " + model.getValueAt(i, 2));
+                break;
+            }
+        }
+
+        if (!found) {
+            JOptionPane.showMessageDialog(teacherFrame, "No match found for number: " + searchNumber);
+        }
+                    
+                }
+            });
             
             JButton updatebtn = new JButton("Update");
             updatebtn.setBounds(390, 530, 80, 30);
