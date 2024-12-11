@@ -3,6 +3,7 @@ package visual_project;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Locale;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
@@ -37,6 +38,11 @@ public class StudentUser {
                 JList<String> list = new JList<>(model);
                 JScrollPane scrollPane = new JScrollPane(list);
                 scrollPane.setBounds(200, 80, 330, 450);
+                
+               model.addElement("Notice 1: School will be closed tomorrow.".toUpperCase(Locale.ITALY));
+               model.addElement("Notice 2: Parent-teacher meetings scheduled for Friday.".toUpperCase(Locale.ITALY));
+               model.addElement("Notice 3: New library books available for checkout.".toUpperCase(Locale.ITALY));
+                
                 studentFrame.add(scrollPane);
                 studentFrame.revalidate();
                 studentFrame.repaint();
@@ -56,6 +62,13 @@ public class StudentUser {
             JTable noteTable = new JTable(model);
             JScrollPane noteScroll = new JScrollPane(noteTable);
             noteScroll.setBounds(180, 80, 370, 380);
+            
+            model.addRow(new Object[]{"61","Dila","Bilgin","Math","Continous"});
+            model.addRow(new Object[]{"61","Dila","Bilgin","Linear","Continous"});
+            model.addRow(new Object[]{"61","Dila","Bilgin","Differantial","NotContinous"});
+            model.addRow(new Object[]{"61","Dila","Bilgin","Programing","NotContinous"});
+            model.addRow(new Object[]{"61","Dila","Bilgin","Numeric","Continous"});
+            
             studentFrame.add(noteScroll);
         });
         
@@ -65,14 +78,22 @@ public class StudentUser {
         notebtn.addActionListener(e -> {
                 studentFrame.getContentPane().removeAll();
                 studentFrame.add(btnpanel);
-                studentFrame.revalidate();
-                studentFrame.repaint();
+                
                 
             DefaultTableModel model = new DefaultTableModel(new String[]{"Number", "Name", "Surname","Lecture","Note"}, 0);
             JTable noteTable = new JTable(model);
             JScrollPane noteScroll = new JScrollPane(noteTable);
             noteScroll.setBounds(180, 80, 370, 380);
             studentFrame.add(noteScroll);
+            
+            model.addRow(new Object[]{"61","Dila","Bilgin","Math","45"});
+            model.addRow(new Object[]{"61","Dila","Bilgin","Linear","73"});
+            model.addRow(new Object[]{"61","Dila","Bilgin","Differantial","30"});
+            model.addRow(new Object[]{"61","Dila","Bilgin","Programing","70"});
+            model.addRow(new Object[]{"61","Dila","Bilgin","Numeric","90"});
+            
+            studentFrame.revalidate();
+            studentFrame.repaint();
         });
         
         JButton courseregistrationbtn = new JButton("Course Registration");
@@ -82,24 +103,15 @@ public class StudentUser {
                 studentFrame.getContentPane().removeAll();
                 studentFrame.add(btnpanel);
                 
-                
-            String[] clas = {"P", "1", "2", "3", "4"};
-            JComboBox<String> combo = new JComboBox<>(clas);
-            combo.setBounds(450, 30, 100, 30);
-            studentFrame.add(combo);
-
-            JLabel classeslbl = new JLabel("Choose a class:");
-            classeslbl.setBounds(350, 30, 150, 30);
-            studentFrame.add(classeslbl);
             
             JLabel searchlbl=new JLabel("Search Lesson:");
-            searchlbl.setBounds(200,80,120,30);
+            searchlbl.setBounds(200,50,120,30);
             studentFrame.add(searchlbl);
             JTextField searchField =new JTextField();
-            searchField.setBounds(300,80,120,30);
+            searchField.setBounds(300,50,120,30);
             studentFrame.add(searchField);
             JButton searchbtn=new JButton("Search");
-            searchbtn.setBounds(450,80,100,30);
+            searchbtn.setBounds(450,50,100,30);
             studentFrame.add(searchbtn);
             
             DefaultTableModel model = new DefaultTableModel(new String[]{"Number","Lecture","Hour","Select"}, 0);
@@ -107,6 +119,8 @@ public class StudentUser {
             JScrollPane noteScroll = new JScrollPane(noteTable);
             noteScroll.setBounds(180, 130, 370, 380);
             studentFrame.add(noteScroll);
+            
+            model.addRow(new Object[]{});
             
             JButton selectbtn=new JButton("Select");
             selectbtn.setBounds(450,520,100,30);
@@ -135,6 +149,13 @@ public class StudentUser {
                 noteScroll.setBounds(180, 80, 370, 380);
                 studentFrame.add(noteScroll);
                 
+                model.addRow(new Object[]{"Monday","12.00-14.00","Linear"});
+                model.addRow(new Object[]{"Wednesday","13.00-15.00","Math"});
+                model.addRow(new Object[]{"Friday","09.00-11.00","Numeric"});
+                model.addRow(new Object[]{"Monday","12.00-14.00","Diff"});
+                model.addRow(new Object[]{"Wednesday","13.00-15.00","Programing"});
+                model.addRow(new Object[]{"Friday","09.00-11.00","Calculus"});
+                
                 studentFrame.revalidate();
                 studentFrame.repaint();
         });
@@ -154,6 +175,10 @@ public class StudentUser {
                 JScrollPane scrollPane = new JScrollPane(list);
                 scrollPane.setBounds(200, 80, 330, 450);
                 studentFrame.add(scrollPane);
+                
+               model.addElement("Notice 1: School will be closed tomorrow.".toUpperCase(Locale.ITALY));
+               model.addElement("Notice 2: Parent-teacher meetings scheduled for Friday.".toUpperCase(Locale.ITALY));
+               model.addElement("Notice 3: New library books available for checkout.".toUpperCase(Locale.ITALY));
                 
                 studentFrame.revalidate();
                 studentFrame.repaint();
