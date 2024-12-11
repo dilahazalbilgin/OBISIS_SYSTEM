@@ -3,6 +3,8 @@ package visual_project;
 import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
@@ -84,6 +86,7 @@ public class TeacherUser {
             JScrollPane noteScroll = new JScrollPane(noteTable);
             noteScroll.setBounds(180, 80, 370, 380);
             teacherFrame.add(noteScroll);
+            
 
             JLabel searchlbl = new JLabel("Search number:");
             searchlbl.setBounds(180, 480, 150, 30);
@@ -108,6 +111,40 @@ public class TeacherUser {
 
             teacherFrame.add(check1);
             teacherFrame.add(check2);
+            
+             Map<String, Object[][]> classData = new HashMap<>();
+            combo.setSelectedIndex(0);
+            classData.put("P", new Object[][]{
+             {"10", "Ali", "Kara", "Math", check1.isSelected() },
+             {"5", "Ahmet", "Kılıç", "Math", "0"},
+             {"20", "Ayşe", "Koç", "Math", "0"}
+            });
+            classData.put("1", new Object[][]{
+             {"15", "Mehmet", "Yılmaz", "Math", "0"},
+             {"8", "Fatma", "Çelik", "Math", "0"}
+            });
+            classData.put("2", new Object[][]{
+             {"22", "Zeynep", "Demir", "Math", "0"}
+            });
+            classData.put("3", new Object[][]{
+             {"50", "Ali", "Kara", "Math", "0"},
+             {"51", "Ahmet", "Kılıç", "Math", "0"},
+             {"52", "Ayşe", "Koç", "Math", "0"}
+            });
+            classData.put("P", new Object[][]{
+             {"78", "Ali", "Kara", "Math", "0"},
+             {"67", "Ahmet", "Kılıç", "Math", "0"}
+            });
+
+            combo.addActionListener(event -> {
+            String selectedClass = (String) combo.getSelectedItem();
+            model.setRowCount(0); 
+            if (classData.containsKey(selectedClass)) {
+              for (Object[] row : classData.get(selectedClass)) {
+                model.addRow(row); 
+             }
+           }
+        });
 
             JButton addbtn = new JButton("Add");
             addbtn.setBounds(400, 480, 110, 30);
@@ -143,10 +180,39 @@ public class TeacherUser {
             noteScroll.setBounds(180, 80, 370, 380);
             teacherFrame.add(noteScroll);
             
-            model.addRow(new Object[]{"10","Ali","Kara","Math","0"});
-            model.addRow(new Object[]{"5","Ahmet","kılıç","Math","0"});
-            model.addRow(new Object[]{"20","Ayşe","koç","Math","0"});
-            model.addRow(new Object[]{"30","Asiye","Kalan","Math","0"});
+            Map<String, Object[][]> classData = new HashMap<>();
+            combo.setSelectedIndex(0);
+            classData.put("P", new Object[][]{
+             {"10", "Ali", "Kara", "Math", "0"},
+             {"5", "Ahmet", "Kılıç", "Math", "0"},
+             {"20", "Ayşe", "Koç", "Math", "0"}
+            });
+            classData.put("1", new Object[][]{
+             {"15", "Mehmet", "Yılmaz", "Math", "0"},
+             {"8", "Fatma", "Çelik", "Math", "0"}
+            });
+            classData.put("2", new Object[][]{
+             {"22", "Zeynep", "Demir", "Math", "0"}
+            });
+            classData.put("3", new Object[][]{
+             {"50", "Ali", "Kara", "Math", "0"},
+             {"51", "Ahmet", "Kılıç", "Math", "0"},
+             {"52", "Ayşe", "Koç", "Math", "0"}
+            });
+            classData.put("P", new Object[][]{
+             {"78", "Ali", "Kara", "Math", "0"},
+             {"67", "Ahmet", "Kılıç", "Math", "0"}
+            });
+
+            combo.addActionListener(event -> {
+            String selectedClass = (String) combo.getSelectedItem();
+            model.setRowCount(0); 
+            if (classData.containsKey(selectedClass)) {
+              for (Object[] row : classData.get(selectedClass)) {
+                model.addRow(row); 
+             }
+           }
+        });
 
             JLabel searchlbl = new JLabel("Search number:");
             searchlbl.setBounds(180, 480, 150, 30);
