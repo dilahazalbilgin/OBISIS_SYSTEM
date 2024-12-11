@@ -56,6 +56,8 @@ public class TeacherUser {
                     }else if (response == JOptionPane.NO_OPTION) {
                     
                     }
+                    }else{
+                    JOptionPane.showMessageDialog(teacherFrame, "You didn't write anythink.If you want to publish notice please write the notice!");
                     }
                         }
                     });
@@ -82,40 +84,15 @@ public class TeacherUser {
             teacherFrame.add(classeslbl);
 
             DefaultTableModel model = new DefaultTableModel(new String[]{"Number", "Name", "Surname","Lecture", "Attendance"}, 0);
-            JTable noteTable = new JTable(model);
-            JScrollPane noteScroll = new JScrollPane(noteTable);
-            noteScroll.setBounds(180, 80, 370, 380);
-            teacherFrame.add(noteScroll);
+            JTable attedanceTable = new JTable(model);
+            JScrollPane attedanceScroll = new JScrollPane(attedanceTable);
+            attedanceScroll.setBounds(180, 80, 370, 380);
+            teacherFrame.add(attedanceScroll);
             
-
-            JLabel searchlbl = new JLabel("Search number:");
-            searchlbl.setBounds(180, 480, 150, 30);
-            teacherFrame.add(searchlbl);
-
-            JTextField searchField = new JTextField();
-            searchField.setBounds(280, 480, 100, 30);
-            teacherFrame.add(searchField);
-
-            JLabel attendancelbl = new JLabel("Attendance Status:");
-            attendancelbl.setBounds(180, 520, 150, 30);
-            teacherFrame.add(attendancelbl);
-
-            JCheckBox check1 = new JCheckBox("Continous");
-            check1.setBounds(300, 520, 100, 30);
-            JCheckBox check2 = new JCheckBox("Noncontinous");
-            check2.setBounds(300, 550, 120, 30);
-
-            ButtonGroup group = new ButtonGroup();
-            group.add(check1);
-            group.add(check2);
-
-            teacherFrame.add(check1);
-            teacherFrame.add(check2);
-            
-             Map<String, Object[][]> classData = new HashMap<>();
+            Map<String, Object[][]> classData = new HashMap<>();
             combo.setSelectedIndex(0);
             classData.put("P", new Object[][]{
-             {"10", "Ali", "Kara", "Math", check1.isSelected() },
+             {"10", "Ali", "Kara", "Math", "0"},
              {"5", "Ahmet", "Kılıç", "Math", "0"},
              {"20", "Ayşe", "Koç", "Math", "0"}
             });
@@ -131,7 +108,7 @@ public class TeacherUser {
              {"51", "Ahmet", "Kılıç", "Math", "0"},
              {"52", "Ayşe", "Koç", "Math", "0"}
             });
-            classData.put("P", new Object[][]{
+            classData.put("4", new Object[][]{
              {"78", "Ali", "Kara", "Math", "0"},
              {"67", "Ahmet", "Kılıç", "Math", "0"}
             });
@@ -146,13 +123,114 @@ public class TeacherUser {
            }
         });
 
+            JLabel searchlbl = new JLabel("Search number:");
+            searchlbl.setBounds(180, 480, 150, 30);
+            teacherFrame.add(searchlbl);
+
+            JTextField searchField = new JTextField();
+            searchField.setBounds(280, 480, 100, 30);
+            teacherFrame.add(searchField);
+
+            JLabel attendancelbl = new JLabel("Attendance Status:");
+            attendancelbl.setBounds(180, 520, 150, 30);
+            teacherFrame.add(attendancelbl);
+
+            JRadioButton check1 = new JRadioButton("Continous");
+            check1.setBounds(300, 520, 100, 30);
+            JRadioButton check2 = new JRadioButton("Noncontinous");
+            check2.setBounds(300, 550, 120, 30);
+
+            ButtonGroup group = new ButtonGroup();
+            group.add(check1);
+            group.add(check2);
+
+            teacherFrame.add(check1);
+            teacherFrame.add(check2);     
+
             JButton addbtn = new JButton("Add");
             addbtn.setBounds(400, 480, 110, 30);
             teacherFrame.add(addbtn);
-            
+            addbtn.addActionListener(new ActionListener(){
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String searchNumber = searchField.getText();
+        String selectedAttendance = null;
+        boolean found = false;
+
+        if (searchNumber.isEmpty() || group.getSelection()==null) {
+            JOptionPane.showMessageDialog(teacherFrame, "Please fill in both the search number and note fields.");
+            return;
+        }else{
+        if (group.getSelection().equals(check1.getModel())) {
+            selectedAttendance="Continous";
+        } else if (group.getSelection().equals(check2.getModel())) {
+            selectedAttendance="NotContinous";
+        }
+        }
+        
+        for (int i = 0; i < model.getRowCount(); i++) { 
+            String tableNumber = model.getValueAt(i, 0).toString(); 
+            if (tableNumber.equals(searchNumber)) { 
+                found = true;
+                attedanceTable.setRowSelectionInterval(i, i); 
+                String existingAttedance = model.getValueAt(i, 4).toString();
+                if (!existingAttedance.equals("0")) {
+                    JOptionPane.showMessageDialog(teacherFrame, 
+                        "The attedance is already assigned. Please use the Update button to change it.\n");
+                } else {
+                    model.setValueAt(selectedAttendance, i, 4); 
+                    JOptionPane.showMessageDialog(teacherFrame, 
+                        "Attedance added successfully for:\nNumber: " + tableNumber +
+                        "\nName: " + model.getValueAt(i, 1) +
+                        "\nSurname: " + model.getValueAt(i, 2));
+                }
+                break;
+            }
+        }
+        if (!found) {
+            JOptionPane.showMessageDialog(teacherFrame, "No match found for number: " + searchNumber);
+        }
+    }
+});
             JButton updatebtn = new JButton("Update");
             updatebtn.setBounds(400, 520, 110, 30);
             teacherFrame.add(updatebtn);
+            updatebtn.addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String searchNumber = searchField.getText();
+                    String selectedAttendance = null;
+                    boolean found = false;
+                    if (group.getSelection().equals(check1.getModel())) {
+                      selectedAttendance="Continous";
+                  } else if (group.getSelection().equals(check2.getModel())) {
+                      selectedAttendance="NotContinous";
+                 }
+        
+                     if (searchNumber.isEmpty() || group.getSelection()==null) {
+                       JOptionPane.showMessageDialog(teacherFrame, "Please fill in both the search number and note fields.");
+                       return;
+                    }else{
+                         
+                     for (int i = 0; i < model.getRowCount(); i++) { 
+                     String tableNumber = model.getValueAt(i, 0).toString(); 
+                     if (tableNumber.equals(searchNumber)) { 
+                     found = true;
+                     attedanceTable.setRowSelectionInterval(i, i); 
+                      model.setValueAt(selectedAttendance, i, 4); 
+                      JOptionPane.showMessageDialog(teacherFrame, 
+                        "Attedance added successfully for:\nNumber: " + tableNumber +
+                        "\nName: " + model.getValueAt(i, 1) +
+                        "\nSurname: " + model.getValueAt(i, 2));
+                
+                break;
+                  }}
+                     }
+                    if (!found) {
+                     JOptionPane.showMessageDialog(teacherFrame, "No match found for number: " + searchNumber);
+                }
+                }
+            });
 
             teacherFrame.revalidate();
             teacherFrame.repaint();
@@ -199,7 +277,7 @@ public class TeacherUser {
              {"51", "Ahmet", "Kılıç", "Math", "0"},
              {"52", "Ayşe", "Koç", "Math", "0"}
             });
-            classData.put("P", new Object[][]{
+            classData.put("4", new Object[][]{
              {"78", "Ali", "Kara", "Math", "0"},
              {"67", "Ahmet", "Kılıç", "Math", "0"}
             });
@@ -250,8 +328,6 @@ public class TeacherUser {
             if (tableNumber.equals(searchNumber)) { 
                 found = true;
                 noteTable.setRowSelectionInterval(i, i); 
-
-                // Not sıfırdan farklıysa güncelleme yapılır
                 String existingNote = model.getValueAt(i, 4).toString();
                 if (!existingNote.equals("0")) {
                     JOptionPane.showMessageDialog(teacherFrame, 
@@ -483,15 +559,17 @@ public class TeacherUser {
             addbtn.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
+           
                 if(!noticearea.getText().isEmpty()){
                     String selected=(String) combo.getSelectedItem();
                     int response = JOptionPane.showConfirmDialog(teacherFrame, "Do you want to publish this class and this notice?"+"\nClass: "+selected+"\nNotice: "+noticearea.getText(), "Alert", JOptionPane.YES_NO_OPTION);
                     if(response==JOptionPane.YES_OPTION){
                     JOptionPane.showMessageDialog(teacherFrame, "You published!");
                     }else if (response == JOptionPane.NO_OPTION) {
-                    
                     }
-                    }
+                    }else{
+                    JOptionPane.showMessageDialog(teacherFrame, "You didn't write notice!");
+                }
             }
         });
         teacherFrame.revalidate();
