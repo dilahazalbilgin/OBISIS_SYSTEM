@@ -262,8 +262,6 @@ public class TeacherUser {
             if (tableNumber.equals(searchNumber)) { 
                 found = true;
                 noteTable.setRowSelectionInterval(i, i); 
-
-                // Note kısmını sıfıra güncelle
                 model.setValueAt("0", i, 4);
 
                 JOptionPane.showMessageDialog(teacherFrame, 
@@ -279,7 +277,6 @@ public class TeacherUser {
         }
     }
 });
-
 
             teacherFrame.revalidate();
             teacherFrame.repaint();
@@ -338,6 +335,33 @@ public class TeacherUser {
         });
             JButton approvebtn=new JButton("Aprove");
             approvebtn.setBounds(450,520,100,30);
+           approvebtn.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (model.getSize() >= 3) {
+            StringBuilder listContent = new StringBuilder();
+            for (int i = 0; i < model.getSize(); i++) {
+                listContent.append(model.getElementAt(i)).append("\n");
+            }
+
+            int response = JOptionPane.showConfirmDialog(
+                teacherFrame,
+                "Do you want to approve this list?\n" + listContent,
+                "Alert",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (response == JOptionPane.YES_OPTION) {
+                JOptionPane.showMessageDialog(teacherFrame, "Program approved!");
+            }
+        } else {
+            JOptionPane.showMessageDialog(teacherFrame, "You must select at least 3 items before approving.");
+        }
+    }
+});
+
+
+
             teacherFrame.add(approvebtn);
             teacherFrame.add(deletebtn);
             teacherFrame.add(selectbtn);
@@ -360,7 +384,9 @@ public class TeacherUser {
                 JScrollPane noteScroll = new JScrollPane(noteTable);
                 noteScroll.setBounds(180, 80, 370, 380);
                 teacherFrame.add(noteScroll);
-                model.addRow(new Object[]{"pzt","12.00","math"});
+                model.addRow(new Object[]{"Monday","12.00-14.00","Calculus"});
+                model.addRow(new Object[]{"Wednesday","13.00-15.00","Calculus"});
+                model.addRow(new Object[]{"Friday","09.00-11.00","Calculus"});
         teacherFrame.revalidate();
         teacherFrame.repaint();
         
