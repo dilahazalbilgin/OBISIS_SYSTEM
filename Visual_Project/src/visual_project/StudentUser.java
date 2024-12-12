@@ -269,7 +269,6 @@ public class StudentUser {
             noteScroll.setBounds(180, 80, 370, 380);
             studentFrame.add(noteScroll);
 
-            // Onaylanan dersleri programa ekle
             for (Object[] lesson : confirmedLessons) {
                 model.addRow(lesson);
             }
