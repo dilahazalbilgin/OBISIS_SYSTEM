@@ -1,8 +1,9 @@
 package visual_project;
 
-import java.awt.List;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.*;
@@ -92,23 +93,37 @@ public class TeacherUser {
             classData.put("P", new Object[][]{
                 {"10", "Ali", "Kara", "Math", "0"},
                 {"5", "Ahmet", "Kılıç", "Math", "0"},
-                {"20", "Ayşe", "Koç", "Math", "0"}
-            });
-            classData.put("1", new Object[][]{
+                {"20", "Ayşe", "Koç", "Math", "0"},
                 {"15", "Mehmet", "Yılmaz", "Math", "0"},
                 {"8", "Fatma", "Çelik", "Math", "0"}
             });
-            classData.put("2", new Object[][]{
-                {"22", "Zeynep", "Demir", "Math", "0"}
-            });
-            classData.put("3", new Object[][]{
+            classData.put("1", new Object[][]{
+                {"15", "Mehmet", "Yılmaz", "Math", "0"},
+                {"8", "Fatma", "Çelik", "Math", "0"},
                 {"50", "Ali", "Kara", "Math", "0"},
                 {"51", "Ahmet", "Kılıç", "Math", "0"},
                 {"52", "Ayşe", "Koç", "Math", "0"}
             });
-            classData.put("4", new Object[][]{
+            classData.put("2", new Object[][]{
+                {"22", "Zeynep", "Demir", "Math", "0"},
+                {"50", "Ali", "Kara", "Math", "0"},
+                {"51", "Ahmet", "Kılıç", "Math", "0"},
+                {"52", "Ayşe", "Koç", "Math", "0"}
+            });
+            classData.put("3", new Object[][]{
+                {"50", "Ali", "Kara", "Math", "0"},
+                {"51", "Ahmet", "Kılıç", "Math", "0"},
+                {"52", "Ayşe", "Koç", "Math", "0"},
                 {"78", "Ali", "Kara", "Math", "0"},
                 {"67", "Ahmet", "Kılıç", "Math", "0"}
+            });
+            classData.put("4", new Object[][]{
+                {"78", "Ali", "Kara", "Math", "0"},
+                {"67", "Ahmet", "Kılıç", "Math", "0"},
+                {"22", "Zeynep", "Demir", "Math", "0"},
+                {"50", "Ali", "Kara", "Math", "0"},
+                {"51", "Ahmet", "Kılıç", "Math", "0"},
+                {"52", "Ayşe", "Koç", "Math", "0"}
             });
 
             combo.addActionListener(event -> {
@@ -261,23 +276,37 @@ public class TeacherUser {
             classData.put("P", new Object[][]{
                 {"10", "Ali", "Kara", "Math", "0"},
                 {"5", "Ahmet", "Kılıç", "Math", "0"},
-                {"20", "Ayşe", "Koç", "Math", "0"}
-            });
-            classData.put("1", new Object[][]{
+                {"20", "Ayşe", "Koç", "Math", "0"},
                 {"15", "Mehmet", "Yılmaz", "Math", "0"},
                 {"8", "Fatma", "Çelik", "Math", "0"}
             });
+            classData.put("1", new Object[][]{
+                {"15", "Mehmet", "Yılmaz", "Math", "0"},
+                {"8", "Fatma", "Çelik", "Math", "0"},
+                {"10", "Ali", "Kara", "Math", "0"},
+                {"5", "Ahmet", "Kılıç", "Math", "0"},
+                {"20", "Ayşe", "Koç", "Math", "0"}
+            });
             classData.put("2", new Object[][]{
-                {"22", "Zeynep", "Demir", "Math", "0"}
+                {"22", "Zeynep", "Demir", "Math", "0"},
+                {"10", "Ali", "Kara", "Math", "0"},
+                {"5", "Ahmet", "Kılıç", "Math", "0"},
+                {"20", "Ayşe", "Koç", "Math", "0"},
             });
             classData.put("3", new Object[][]{
                 {"50", "Ali", "Kara", "Math", "0"},
                 {"51", "Ahmet", "Kılıç", "Math", "0"},
-                {"52", "Ayşe", "Koç", "Math", "0"}
+                {"52", "Ayşe", "Koç", "Math", "0"},
+                {"10", "Ali", "Kara", "Math", "0"},
+                {"5", "Ahmet", "Kılıç", "Math", "0"},
+                {"20", "Ayşe", "Koç", "Math", "0"},
             });
             classData.put("4", new Object[][]{
                 {"78", "Ali", "Kara", "Math", "0"},
-                {"67", "Ahmet", "Kılıç", "Math", "0"}
+                {"67", "Ahmet", "Kılıç", "Math", "0"},
+                {"10", "Ali", "Kara", "Math", "0"},
+                {"5", "Ahmet", "Kılıç", "Math", "0"},
+                {"20", "Ayşe", "Koç", "Math", "0"},
             });
 
             combo.addActionListener(event -> {
@@ -453,6 +482,8 @@ public class TeacherUser {
             list2.setBounds(200, 220, 300, 200);
             JButton selectbtn = new JButton("Select");
             selectbtn.setBounds(450, 180, 100, 30);
+            
+            
             selectbtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -472,32 +503,43 @@ public class TeacherUser {
                     }
                 }
             });
+            
+            
+            List<String> selectedLessons = new ArrayList<>();
+            
             JButton approvebtn = new JButton("Aprove");
             approvebtn.setBounds(450, 520, 100, 30);
             approvebtn.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (model.getSize() >= 3) {
-                        StringBuilder listContent = new StringBuilder();
-                        for (int i = 0; i < model.getSize(); i++) {
-                            listContent.append(model.getElementAt(i)).append("\n");
-                        }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (model.getSize() >= 3) {  // En az 3 ders seçilmiş olmalı
+            StringBuilder listContent = new StringBuilder();
+            for (int i = 0; i < model.getSize(); i++) {
+                listContent.append(model.getElementAt(i)).append("\n");
+            }
 
-                        int response = JOptionPane.showConfirmDialog(
-                                teacherFrame,
-                                "Do you want to approve this list?\n" + listContent,
-                                "Alert",
-                                JOptionPane.YES_NO_OPTION
-                        );
+            // Seçimleri kaydetme
+            selectedLessons.clear();  // Önceki seçimleri temizle
+            for (int i = 0; i < model.getSize(); i++) {
+                selectedLessons.add(model.getElementAt(i).toString());
+            }
 
-                        if (response == JOptionPane.YES_OPTION) {
-                            JOptionPane.showMessageDialog(teacherFrame, "Program approved!");
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(teacherFrame, "You must select at least 3 items before approving.");
-                    }
-                }
-            });
+            // Onay mesajı
+            int response = JOptionPane.showConfirmDialog(
+                    teacherFrame,
+                    "Do you want to approve this list?\n" + listContent,
+                    "Alert",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if (response == JOptionPane.YES_OPTION) {
+                JOptionPane.showMessageDialog(teacherFrame, "Program approved!");
+            }
+        } else {
+            JOptionPane.showMessageDialog(teacherFrame, "You must select at least 3 items before approving.");
+        }
+    }
+});
 
             teacherFrame.add(approvebtn);
             teacherFrame.add(deletebtn);
