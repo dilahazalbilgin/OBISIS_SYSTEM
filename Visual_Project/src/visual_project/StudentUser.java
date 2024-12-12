@@ -211,7 +211,6 @@ public class StudentUser {
                         Object hour = model.getValueAt(rowIndex, 2);
                         Object day = model.getValueAt(rowIndex, 3);
 
-                        // Seçilen dersi listeye ekle
                         confirmedLessons.add(new Object[]{day, hour, lecture});
 
                         selectedLessons.append("- ").append(lecture)
