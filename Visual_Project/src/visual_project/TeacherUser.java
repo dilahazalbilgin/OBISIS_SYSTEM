@@ -512,19 +512,17 @@ public class TeacherUser {
             approvebtn.addActionListener(new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (model.getSize() >= 3) {  // En az 3 ders seçilmiş olmalı
+        if (model.getSize() >= 3) {
             StringBuilder listContent = new StringBuilder();
             for (int i = 0; i < model.getSize(); i++) {
                 listContent.append(model.getElementAt(i)).append("\n");
             }
 
-            // Seçimleri kaydetme
-            selectedLessons.clear();  // Önceki seçimleri temizle
+            selectedLessons.clear(); 
             for (int i = 0; i < model.getSize(); i++) {
                 selectedLessons.add(model.getElementAt(i).toString());
             }
 
-            // Onay mesajı
             int response = JOptionPane.showConfirmDialog(
                     teacherFrame,
                     "Do you want to approve this list?\n" + listContent,
