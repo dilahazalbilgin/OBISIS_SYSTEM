@@ -2,8 +2,11 @@ package visual_project;
 
 import java.awt.Component;
 import java.awt.Font;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -15,6 +18,8 @@ public class StudentUser {
     public StudentUser(JFrame studentFrame) {
         studentFrame.setTitle("Student Page");
         studentFrame.getContentPane().removeAll();
+
+        List<Object[]> confirmedLessons = new ArrayList<>();
 
         JPanel btnpanel = new JPanel();
         btnpanel.setLayout(null);
@@ -98,9 +103,12 @@ public class StudentUser {
             studentFrame.repaint();
         });
 
+        HashMap<String, Boolean> selectionMap = new HashMap<>();
+
         JButton courseregistrationbtn = new JButton("Course Registration");
         courseregistrationbtn.setBounds(15, 250, 120, 60);
         btnpanel.add(courseregistrationbtn);
+
         courseregistrationbtn.addActionListener(e -> {
             studentFrame.getContentPane().removeAll();
             studentFrame.add(btnpanel);
@@ -119,37 +127,36 @@ public class StudentUser {
             selectProgrameScroll.setBounds(180, 130, 370, 380);
             studentFrame.add(selectProgrameScroll);
 
-            model.addRow(new Object[]{"61", "Math", "12.00-14.00", "Monday", false});
-            model.addRow(new Object[]{"61", "Math", "14.00-16.00", "Friday", false});
-            model.addRow(new Object[]{"61", "Math", "11.00-13.00", "Monday", false});
-            model.addRow(new Object[]{"61", "Calculus", "12.00-14.00", "Monday", false});
-            model.addRow(new Object[]{"61", "Calculus", "09.00-11.00", "Monday", false});
-            model.addRow(new Object[]{"61", "Diff", "12.00-14.00", "Friday", false});
-            model.addRow(new Object[]{"61", "Programming", "10.00-12.00", "Monday", false});
-            model.addRow(new Object[]{"61", "Programming", "12.00-14.00", "Monday", false});
-            model.addRow(new Object[]{"61", "Numeric", "12.00-14.00", "Wednesday", false});
-            model.addRow(new Object[]{"61", "Numeric", "11.00-13.00", "Tuesday", false});
-            model.addRow(new Object[]{"61", "Numeric", "09.00-11.00", "Thursday", false});
-            model.addRow(new Object[]{"61", "Numeric", "12.00-14.00", "Monday", false});
-            model.addRow(new Object[]{"61", "Linear", "08.00-10.00", "Monday", false});
-            model.addRow(new Object[]{"61", "Linear", "11.00-13.00", "Thursday", false});
-            model.addRow(new Object[]{"61", "Linear", "09.00-11.00", "Wednesday", false});
-            model.addRow(new Object[]{"61", "Linear", "12.00-14.00", "Thursday", false});
+            Object[][] allRows = {
+                {"61", "Math", "12.00-14.00", "Monday", false},
+                {"61", "Math", "14.00-16.00", "Friday", false},
+                {"61", "Math", "11.00-13.00", "Monday", false},
+                {"61", "Calculus", "12.00-14.00", "Monday", false},
+                {"61", "Calculus", "09.00-11.00", "Monday", false},
+                {"61", "Diff", "12.00-14.00", "Friday", false},
+                {"61", "Programming", "10.00-12.00", "Monday", false},
+                {"61", "Programming", "12.00-14.00", "Monday", false},
+                {"61", "Numeric", "12.00-14.00", "Wednesday", false},
+                {"61", "Numeric", "11.00-13.00", "Tuesday", false},
+                {"61", "Numeric", "09.00-11.00", "Thursday", false},
+                {"61", "Numeric", "12.00-14.00", "Monday", false},
+                {"61", "Linear", "08.00-10.00", "Monday", false},
+                {"61", "Linear", "11.00-13.00", "Thursday", false},
+                {"61", "Linear", "09.00-11.00", "Wednesday", false},
+                {"61", "Linear", "12.00-14.00", "Thursday", false}
+            };
+
+            for (Object[] row : allRows) {
+                model.addRow(row);
+            }
+            selectProgrameTable.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new JCheckBox()));
 
             selectProgrameTable.getColumnModel().getColumn(4).setCellRenderer(new DefaultTableCellRenderer() {
                 @Override
                 public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                     JCheckBox checkBox = new JCheckBox();
-                    checkBox.setSelected((Boolean) value); 
-                    return checkBox;
-                }
-            });
-
-            selectProgrameTable.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new JCheckBox()) {
-                @Override
-                public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-                    JCheckBox checkBox = (JCheckBox) super.getTableCellEditorComponent(table, value, isSelected, row, column);
-                    checkBox.setSelected((Boolean) value);
+                    checkBox.setSelected(value != null && (Boolean) value);
+                    checkBox.setHorizontalAlignment(SwingConstants.CENTER);
                     return checkBox;
                 }
             });
@@ -157,70 +164,87 @@ public class StudentUser {
             JButton searchbtn = new JButton("Search");
             searchbtn.setBounds(450, 50, 100, 30);
             studentFrame.add(searchbtn);
-            searchbtn.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String searchTerm = searchField.getText().toLowerCase();  
+            searchbtn.addActionListener(e1 -> {
+                String searchTerm = searchField.getText().toLowerCase();
 
-                    model.setRowCount(0);
-
-                    
-                    Object[][] allRows = {
-                        {"61", "Math", "12.00-14.00", "Monday", false},
-                        {"61", "Math", "14.00-16.00", "Friday", false},
-                        {"61", "Math", "11.00-13.00", "Monday", false},
-                        {"61", "Calculus", "12.00-14.00", "Monday", false},
-                        {"61", "Calculus", "09.00-11.00", "Monday", false},
-                        {"61", "Diff", "12.00-14.00", "Friday", false},
-                        {"61", "Programming", "10.00-12.00", "Monday", false},
-                        {"61", "Programming", "12.00-14.00", "Monday", false},
-                        {"61", "Numeric", "12.00-14.00", "Wednesday", false},
-                        {"61", "Numeric", "11.00-13.00", "Tuesday", false},
-                        {"61", "Numeric", "09.00-11.00", "Thursday", false},
-                        {"61", "Numeric", "12.00-14.00", "Monday", false},
-                        {"61", "Linear", "08.00-10.00", "Monday", false},
-                        {"61", "Linear", "11.00-13.00", "Thursday", false},
-                        {"61", "Linear", "09.00-11.00", "Wednesday", false},
-                        {"61", "Linear", "12.00-14.00", "Thursday", false}
-                    };
-
-                    for (Object[] row : allRows) {
-                        String lecture = (String) row[1];
-                        if (lecture.toLowerCase().contains(searchTerm)) {
-                            model.addRow(row);  
-                        }
-                    }
-
-                    selectProgrameTable.revalidate();
-                    selectProgrameTable.repaint();
+                // Tüm satırları sakla
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    String key = (String) model.getValueAt(i, 1);
+                    Boolean isSelected = (Boolean) model.getValueAt(i, 4);
+                    selectionMap.put(key, isSelected);
                 }
+
+                model.setRowCount(0);
+                for (Object[] row : allRows) {
+                    String lecture = (String) row[1];
+                    if (lecture.toLowerCase().contains(searchTerm)) {
+                        row[4] = selectionMap.getOrDefault(lecture, false);
+                        model.addRow(row);
+                    }
+                }
+                selectProgrameTable.revalidate();
+                selectProgrameTable.repaint();
             });
 
             JButton selectbtn = new JButton("Select");
             selectbtn.setBounds(450, 520, 100, 30);
             studentFrame.add(selectbtn);
-            selectbtn.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    int[] selectedRows = selectProgrameTable.getSelectedRows();
+            selectbtn.addActionListener(e1 -> {
+                StringBuilder selectedLessons = new StringBuilder("You have selected the following lessons:\n");
+                boolean hasSelection = false;
+                confirmedLessons.clear();
 
-                    if (selectedRows.length > 0) {
-                        for (int rowIndex : selectedRows) {
-                            Object number = model.getValueAt(rowIndex, 0);
-                            Object lecture = model.getValueAt(rowIndex, 1);
-                            Object hour = model.getValueAt(rowIndex, 2);
-                            Object day = model.getValueAt(rowIndex, 3);
+                for (int rowIndex = 0; rowIndex < model.getRowCount(); rowIndex++) {
+                    Boolean isSelected = (Boolean) model.getValueAt(rowIndex, 4);
+                    if (isSelected != null && isSelected) {
+                        hasSelection = true;
+                        Object lecture = model.getValueAt(rowIndex, 1);
+                        Object hour = model.getValueAt(rowIndex, 2);
+                        Object day = model.getValueAt(rowIndex, 3);
 
-                            System.out.println("Selected Row: " + number + " | " + lecture + " | " + hour + " | " + day);
-                        }
-                    } else {
-                        System.out.println("No rows selected.");
+                        // Seçilen dersi listeye ekle
+                        confirmedLessons.add(new Object[]{day, hour, lecture});
+
+                        selectedLessons.append("- ").append(lecture)
+                                .append(" (").append(hour).append(", ").append(day).append(")\n");
                     }
                 }
+
+                if (hasSelection) {
+                    int confirmation = JOptionPane.showConfirmDialog(
+                            studentFrame,
+                            selectedLessons.toString() + "\nDo you confirm your selection?",
+                            "Confirm Selection",
+                            JOptionPane.YES_NO_OPTION
+                    );
+
+                    if (confirmation == JOptionPane.YES_OPTION) {
+                        JOptionPane.showMessageDialog(
+                                studentFrame,
+                                "Selection confirmed.You can check Programe Button\nThank you!",
+                                "Confirmation",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+                    } else {
+                        JOptionPane.showMessageDialog(
+                                studentFrame,
+                                "Selection was not confirmed.",
+                                "Canceled",
+                                JOptionPane.WARNING_MESSAGE
+                        );
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(
+                            studentFrame,
+                            "No lessons selected. Please select at least one lesson.",
+                            "Warning",
+                            JOptionPane.WARNING_MESSAGE
+                    );
+                }
             });
+
             studentFrame.revalidate();
             studentFrame.repaint();
-
         });
 
         JButton programebtn = new JButton("Programe");
@@ -230,18 +254,17 @@ public class StudentUser {
             studentFrame.getContentPane().removeAll();
             studentFrame.add(btnpanel);
             JOptionPane.showMessageDialog(studentFrame, "You can see the program after the teacher and student approve it.");
+
             DefaultTableModel model = new DefaultTableModel(new String[]{"Day", "Hour", "Lecture"}, 0);
             JTable noteTable = new JTable(model);
             JScrollPane noteScroll = new JScrollPane(noteTable);
             noteScroll.setBounds(180, 80, 370, 380);
             studentFrame.add(noteScroll);
 
-            model.addRow(new Object[]{"Monday", "12.00-14.00", "Linear"});
-            model.addRow(new Object[]{"Wednesday", "13.00-15.00", "Math"});
-            model.addRow(new Object[]{"Friday", "09.00-11.00", "Numeric"});
-            model.addRow(new Object[]{"Monday", "12.00-14.00", "Diff"});
-            model.addRow(new Object[]{"Wednesday", "13.00-15.00", "Programing"});
-            model.addRow(new Object[]{"Friday", "09.00-11.00", "Calculus"});
+            // Onaylanan dersleri programa ekle
+            for (Object[] lesson : confirmedLessons) {
+                model.addRow(lesson);
+            }
 
             studentFrame.revalidate();
             studentFrame.repaint();
@@ -276,12 +299,10 @@ public class StudentUser {
         btnpanel.add(removeBtn);
         removeBtn.addActionListener(e -> {
             studentFrame.getContentPane().removeAll();
+            new LogIn(studentFrame);
             studentFrame.revalidate();
             studentFrame.repaint();
-            new LogIn(studentFrame);
         });
 
-        studentFrame.revalidate();
-        studentFrame.repaint();
     }
 }
