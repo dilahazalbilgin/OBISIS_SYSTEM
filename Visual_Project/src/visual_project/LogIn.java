@@ -11,7 +11,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class LogIn {
-    public LogIn(JFrame logFrame){
+
+    public LogIn(JFrame logFrame) {
         logFrame.getContentPane().removeAll();
 
         JLabel logInlbl = new JLabel("LogIn");
@@ -49,22 +50,29 @@ public class LogIn {
         logInbtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String number = numbertext.getText();
+                String password = new String(passwordtext.getPassword());
+
                 if (numbertext.getText().isEmpty() || passwordtext.getPassword().length == 0) {
                     JOptionPane.showMessageDialog(logFrame, "Empty number or password");
-                } else {
+                } else if (Visual_Project.userDatabase.containsKey(number) && Visual_Project.userDatabase.get(number).equals(password)) {
                     logFrame.getContentPane().removeAll();
-                    if(!codetext.getText().isEmpty()){
-                    if (Integer.parseInt(codetext.getText())==61) {
-                        new TeacherUser(logFrame);
-                    }else{
-                    JOptionPane.showMessageDialog(logFrame, "Wrong code please check code!");
-                    }
-                    }
-                    else if(codetext.getText().isEmpty()){
-                        new StudentUser(logFrame);                    
+                    if (!codetext.getText().isEmpty()) {
+                        if (Integer.parseInt(codetext.getText()) == 61) {
+                            new TeacherUser(logFrame);
+                        } else {
+                            JOptionPane.showMessageDialog(logFrame, "Invalid code please try again");
+                            logFrame.revalidate();
+                            logFrame.repaint();
+                        }
+
+                    } else {
+                        new StudentUser(logFrame);
                     }
                     logFrame.revalidate();
                     logFrame.repaint();
+                } else {
+                    JOptionPane.showMessageDialog(logFrame, "Invalid email or password");
                 }
             }
         });
@@ -93,7 +101,6 @@ public class LogIn {
                 new SignUp(logFrame);
             }
         });
-
 
         logFrame.add(SignUpLabel);
         logFrame.add(forgotPasswordLabel);

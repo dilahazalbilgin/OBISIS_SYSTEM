@@ -1,8 +1,10 @@
 package visual_project;
+
 import java.awt.Font;
 import javax.swing.*;
 
 public class ForgetPassword {
+
     public ForgetPassword(JFrame forgetPassFrame) {
         forgetPassFrame.getContentPane().removeAll();
 
@@ -10,8 +12,8 @@ public class ForgetPassword {
         numberlbl.setBounds(110, 150, 100, 40);
         numberlbl.setFont(new Font("Number", Font.BOLD, 15));
 
-        JTextField emailtext = new JTextField();
-        emailtext.setBounds(200, 150, 220, 40);
+        JTextField numbertext = new JTextField();
+        numbertext.setBounds(200, 150, 220, 40);
 
         JLabel passwordlbl = new JLabel("New Password:");
         passwordlbl.setBounds(110, 210, 150, 40);
@@ -30,27 +32,25 @@ public class ForgetPassword {
         JButton resetbtn = new JButton("Reset");
         resetbtn.setBounds(210, 350, 150, 40);
         resetbtn.addActionListener(e -> {
-            if(emailtext.getText().isEmpty()){
-            JOptionPane.showMessageDialog(forgetPassFrame, "You must enter the number");
-            }else{
-                String password = new String(passwordtext.getPassword());
-                String password2 = new String(passwordtext2.getPassword());
-                if(password.length()==0||!password.equals(password2)){
+            String number = numbertext.getText();
+            String newPassword = new String(passwordtext.getPassword());
+            String confirmPassword = new String(passwordtext2.getPassword());
+
+            if (number.isEmpty()) {
+                JOptionPane.showMessageDialog(forgetPassFrame, "You must enter the number");
+            } else if (!Visual_Project.userDatabase.containsKey(number)) {
+                JOptionPane.showMessageDialog(forgetPassFrame, "This number is not registered");
+            } else if (newPassword.isEmpty() || !newPassword.equals(confirmPassword)) {
                 JOptionPane.showMessageDialog(forgetPassFrame, "Passwords do not match. Please try again.");
-                }else{
-                if (password.equals(password2)) {
-                JOptionPane.showMessageDialog(forgetPassFrame, "Password has been reset");
-                new LogIn(forgetPassFrame); 
+            } else {
+                // Update the password
+                Visual_Project.userDatabase.put(number, newPassword);
+                JOptionPane.showMessageDialog(forgetPassFrame, "Password has been reset successfully");
+                new LogIn(forgetPassFrame);
                 forgetPassFrame.revalidate();
                 forgetPassFrame.repaint();
-            } else {
-                JOptionPane.showMessageDialog(forgetPassFrame, "Passwords do not match. Please try again.");
-            }}
-            
-
-            
             }
-            
+
         });
         JLabel backLabel = new JLabel("←");
         backLabel.setBounds(10, 10, 50, 50);
@@ -73,7 +73,7 @@ public class ForgetPassword {
         forgetPassFrame.add(passwordlbl2);
         forgetPassFrame.add(passwordlbl);
         forgetPassFrame.add(passwordtext);
-        forgetPassFrame.add(emailtext);
+        forgetPassFrame.add(numbertext);
         forgetPassFrame.add(numberlbl);
 
         forgetPassFrame.revalidate();

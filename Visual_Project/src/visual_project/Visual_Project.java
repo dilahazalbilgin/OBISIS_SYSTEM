@@ -1,11 +1,17 @@
 package visual_project;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import javax.swing.*;
 
 public class Visual_Project {
+
+    public static HashMap<String, String> userDatabase = new HashMap<>();
+
     public static void main(String[] args) {
+
         JFrame mainframe = new JFrame("Obisis Project");
         mainframe.setSize(600, 630);
         mainframe.setLayout(null);
@@ -14,12 +20,9 @@ public class Visual_Project {
         JLabel obsislbl = new JLabel("OBISIS");
         obsislbl.setFont(new Font("OBISIS", Font.BOLD, 30));
         obsislbl.setBounds(240, 50, 150, 30);
-        
+
         new LogIn(mainframe);
-        
-        
+
         mainframe.setVisible(true);
     }
 }
-
-
