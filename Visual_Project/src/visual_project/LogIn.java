@@ -53,9 +53,14 @@ public class LogIn {
                     JOptionPane.showMessageDialog(logFrame, "Empty number or password");
                 } else {
                     logFrame.getContentPane().removeAll();
-                    if (!codetext.getText().isEmpty()) {
+                    if(!codetext.getText().isEmpty()){
+                    if (Integer.parseInt(codetext.getText())==61) {
                         new TeacherUser(logFrame);
-                    } else {
+                    }else{
+                    JOptionPane.showMessageDialog(logFrame, "Wrong code please check code!");
+                    }
+                    }
+                    else if(codetext.getText().isEmpty()){
                         new StudentUser(logFrame);                    
                     }
                     logFrame.revalidate();
