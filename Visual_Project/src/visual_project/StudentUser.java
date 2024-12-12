@@ -51,6 +51,15 @@ public class StudentUser {
                 model.addElement("Notice 2: Parent-teacher meetings scheduled for Friday.".toUpperCase(Locale.ITALY));
                 model.addElement("Notice 3: New library books available for checkout.".toUpperCase(Locale.ITALY));
 
+                list.addListSelectionListener(e1 -> {
+                    if (!e1.getValueIsAdjusting()) {
+                        String selectedNotice = list.getSelectedValue();
+                        if (selectedNotice != null) {
+                            JOptionPane.showMessageDialog(studentFrame, selectedNotice, "Notice", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }
+                });
+
                 studentFrame.add(scrollPane);
                 studentFrame.revalidate();
                 studentFrame.repaint();
@@ -289,6 +298,15 @@ public class StudentUser {
             model.addElement("Notice 1: School will be closed tomorrow.".toUpperCase(Locale.ITALY));
             model.addElement("Notice 2: Parent-teacher meetings scheduled for Friday.".toUpperCase(Locale.ITALY));
             model.addElement("Notice 3: New library books available for checkout.".toUpperCase(Locale.ITALY));
+
+            list.addListSelectionListener(e1 -> {
+                if (!e1.getValueIsAdjusting()) {
+                    String selectedNotice = list.getSelectedValue();
+                    if (selectedNotice != null) {
+                        JOptionPane.showMessageDialog(studentFrame, selectedNotice, "Notice", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            });
 
             studentFrame.revalidate();
             studentFrame.repaint();
