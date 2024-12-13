@@ -8,7 +8,7 @@ import javax.swing.*;
 
 public class Visual_Project {
 
-    public static HashMap<String, String> userDatabase = new HashMap<>();
+    public static HashMap<String, User> userDatabase = new HashMap<>();
 
     public static void main(String[] args) {
 

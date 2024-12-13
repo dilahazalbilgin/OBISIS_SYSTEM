@@ -32,9 +32,9 @@ public class ForgetPassword {
         JButton resetbtn = new JButton("Reset");
         resetbtn.setBounds(210, 350, 150, 40);
         resetbtn.addActionListener(e -> {
-            String number = numbertext.getText();
-            String newPassword = new String(passwordtext.getPassword());
-            String confirmPassword = new String(passwordtext2.getPassword());
+            String number = numbertext.getText().trim();
+            String newPassword = new String(passwordtext.getPassword()).trim();
+            String confirmPassword = new String(passwordtext2.getPassword()).trim();
 
             if (number.isEmpty()) {
                 JOptionPane.showMessageDialog(forgetPassFrame, "You must enter the number");
@@ -43,15 +43,16 @@ public class ForgetPassword {
             } else if (newPassword.isEmpty() || !newPassword.equals(confirmPassword)) {
                 JOptionPane.showMessageDialog(forgetPassFrame, "Passwords do not match. Please try again.");
             } else {
-                // Update the password
-                Visual_Project.userDatabase.put(number, newPassword);
+                User user = Visual_Project.userDatabase.get(number);
+                user.setPassword(newPassword);
                 JOptionPane.showMessageDialog(forgetPassFrame, "Password has been reset successfully");
+
                 new LogIn(forgetPassFrame);
                 forgetPassFrame.revalidate();
                 forgetPassFrame.repaint();
             }
-
         });
+
         JLabel backLabel = new JLabel("←");
         backLabel.setBounds(10, 10, 50, 50);
         backLabel.setFont(new Font("Back", Font.BOLD, 30));
@@ -60,7 +61,7 @@ public class ForgetPassword {
         backLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                new LogIn(forgetPassFrame); // Giriş ekranına geri döner
+                new LogIn(forgetPassFrame);
                 forgetPassFrame.revalidate();
                 forgetPassFrame.repaint();
             }

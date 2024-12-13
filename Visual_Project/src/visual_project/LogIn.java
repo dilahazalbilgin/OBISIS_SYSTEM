@@ -53,9 +53,10 @@ public class LogIn {
                 String number = numbertext.getText();
                 String password = new String(passwordtext.getPassword());
 
-                if (numbertext.getText().isEmpty() || passwordtext.getPassword().length == 0) {
+                if (number.isEmpty() || password.isEmpty()) {
                     JOptionPane.showMessageDialog(logFrame, "Empty number or password");
-                } else if (Visual_Project.userDatabase.containsKey(number) && Visual_Project.userDatabase.get(number).equals(password)) {
+                } else if (Visual_Project.userDatabase.containsKey(number)
+                        && Visual_Project.userDatabase.get(number).getPassword().equals(password)) {
                     logFrame.getContentPane().removeAll();
                     if (!codetext.getText().isEmpty()) {
                         if (Integer.parseInt(codetext.getText()) == 61) {
@@ -65,14 +66,13 @@ public class LogIn {
                             logFrame.revalidate();
                             logFrame.repaint();
                         }
-
                     } else {
                         new StudentUser(logFrame);
                     }
                     logFrame.revalidate();
                     logFrame.repaint();
                 } else {
-                    JOptionPane.showMessageDialog(logFrame, "Invalid email or password");
+                    JOptionPane.showMessageDialog(logFrame, "Invalid number or password");
                 }
             }
         });
