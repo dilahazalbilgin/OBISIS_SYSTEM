@@ -1,6 +1,8 @@
 package visual_project;
 
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -49,27 +51,32 @@ public class LogIn {
         JButton logInbtn = new JButton("LogIn");
         logInbtn.setBounds(230, 350, 150, 40);
 
-        logInbtn.addActionListener(e -> {
-            
-            if (numbertext.getText().isEmpty() || passwordtext.getPassword().toString().isEmpty()) {
-                JOptionPane.showMessageDialog(logFrame, "Empty number or password");
-            } else if (validateUser(numbertext.getText(), passwordtext.getPassword().toString())) {
-                logFrame.getContentPane().removeAll();
-                if (!codetext.getText().isEmpty()) {
-                    if (Integer.parseInt(codetext.getText()) == 61) {
-                        new TeacherUser(logFrame);
+        logInbtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String number = numbertext.getText();
+                String password = new String(passwordtext.getPassword());
+
+                if (number.isEmpty() || password.isEmpty()) {
+                    JOptionPane.showMessageDialog(logFrame, "Empty number or password");
+                } else if (validateUser(number, password)) {
+                    logFrame.getContentPane().removeAll();
+                    if (!codetext.getText().isEmpty()) {
+                        if (Integer.parseInt(codetext.getText()) == 61) {
+                            new TeacherUser(logFrame);
+                        } else {
+                            JOptionPane.showMessageDialog(logFrame, "Invalid code please try again");
+                            logFrame.revalidate();
+                            logFrame.repaint();
+                        }
                     } else {
-                        JOptionPane.showMessageDialog(logFrame, "Invalid code please try again");
-                        logFrame.revalidate();
-                        logFrame.repaint();
+                        new StudentUser(logFrame);
                     }
+                    logFrame.revalidate();
+                    logFrame.repaint();
                 } else {
-                    new StudentUser(logFrame);
+                    JOptionPane.showMessageDialog(logFrame, "Invalid number or password");
                 }
-                logFrame.revalidate();
-                logFrame.repaint();
-            } else {
-                JOptionPane.showMessageDialog(logFrame, "Invalid number or password");
             }
         });
 
