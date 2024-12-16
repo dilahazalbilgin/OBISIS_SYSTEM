@@ -50,35 +50,34 @@ public class LogIn {
 
         JButton logInbtn = new JButton("LogIn");
         logInbtn.setBounds(230, 350, 150, 40);
-logInbtn.addActionListener(new ActionListener() {
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String number = numbertext.getText();
-        String password = new String(passwordtext.getPassword());
+        logInbtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String number = numbertext.getText();
+                String password = new String(passwordtext.getPassword());
 
-        if (number.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(logFrame, "Empty number or password");
-        } else if (!codetext.getText().isEmpty()) { // Teacher login attempt
-            int code = Integer.parseInt(codetext.getText());
-            if (validateTeacher(number, password, code)) {
-                logFrame.getContentPane().removeAll();
-                new TeacherUser(logFrame);
-                logFrame.revalidate();
-                logFrame.repaint();
-            } else {
-                JOptionPane.showMessageDialog(logFrame, "Invalid teacher credentials or code");
+                if (number.isEmpty() || password.isEmpty()) {
+                    JOptionPane.showMessageDialog(logFrame, "Empty number or password");
+                } else if (!codetext.getText().isEmpty()) { // Teacher login attempt
+                    int code = Integer.parseInt(codetext.getText());
+                    if (validateTeacher(number, password, code)) {
+                        logFrame.getContentPane().removeAll();
+                        new TeacherUser(logFrame);
+                        logFrame.revalidate();
+                        logFrame.repaint();
+                    } else {
+                        JOptionPane.showMessageDialog(logFrame, "Invalid teacher credentials or code");
+                    }
+                } else if (validateUser(number, password)) { // Student login
+                    logFrame.getContentPane().removeAll();
+                    new StudentUser(logFrame);
+                    logFrame.revalidate();
+                    logFrame.repaint();
+                } else {
+                    JOptionPane.showMessageDialog(logFrame, "Invalid number or password");
+                }
             }
-        } else if (validateUser(number, password)) { // Student login
-            logFrame.getContentPane().removeAll();
-            new StudentUser(logFrame);
-            logFrame.revalidate();
-            logFrame.repaint();
-        } else {
-            JOptionPane.showMessageDialog(logFrame, "Invalid number or password");
-        }
-    }
-});
-
+        });
 
         JLabel forgotPasswordLabel = new JLabel("<html><a href=''>Forgot Password</a></html>");
         forgotPasswordLabel.setBounds(370, 400, 200, 20);
@@ -120,22 +119,22 @@ logInbtn.addActionListener(new ActionListener() {
         logFrame.repaint();
 
     }
-    
+
     private boolean validateTeacher(String number, String password, int code) {
-    try (Connection conn = SQLiteConnection.connect()) {
-        String query = "SELECT password, code FROM TeacherUsers WHERE number = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, number);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getString("password").equals(password) && rs.getInt("code") == code;
+        try (Connection conn = SQLiteConnection.connect()) {
+            String query = "SELECT password, code FROM TeacherUsers WHERE number = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                pstmt.setString(1, number);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    return rs.getString("password").equals(password) && rs.getInt("code") == code;
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return false;
     }
-    return false;
-}
 
     private boolean validateUser(String number, String password) {
         try (Connection conn = SQLiteConnection.connect()) {

@@ -9,7 +9,7 @@ public class Visual_Project {
 
         SQLiteConnection.createTable();
         SQLiteConnection.createTeacherTable();
-        Insert.insertTeacherUser("d", "hazal", "d", 2);
+        SQLiteConnection.insertTeacherUser("d", "hazal", "d", 2);
 
         JFrame mainframe = new JFrame("Obisis Project");
         mainframe.setSize(600, 630);
