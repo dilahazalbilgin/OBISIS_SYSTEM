@@ -8,7 +8,6 @@ import java.sql.SQLException;
 public class SQLiteConnection {
     public static Connection connect() {
         try {
-            // SQLite veritabanı bağlantısı
             String url = "jdbc:sqlite:obisis.db";  // Veritabanı adı
             Connection conn = DriverManager.getConnection(url);
             System.out.println("Connection to SQLite has been established.");
