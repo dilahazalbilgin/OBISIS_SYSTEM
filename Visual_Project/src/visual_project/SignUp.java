@@ -66,10 +66,9 @@ public class SignUp {
             String number = numbertext.getText();
             String password = new String(passwordtext.getPassword());
             String name = nametext.getText();
-            String clases=(String) combo.getSelectedItem();
+            String clases = (String) combo.getSelectedItem();
 
-
-            if (number.isEmpty() || password.isEmpty() || name.isEmpty() ||clases.isEmpty()) {
+            if (number.isEmpty() || password.isEmpty() || name.isEmpty() || clases.isEmpty()) {
                 JOptionPane.showMessageDialog(signUpFrame, "Number, Name, class or password is empty");
             } else if (userExists(number)) {
                 JOptionPane.showMessageDialog(signUpFrame, "This account already exists");
