@@ -8,6 +8,10 @@ public class Visual_Project {
     public static void main(String[] args) {
 
         SQLiteConnection.createTable();
+        SQLiteConnection.createTeacherTable();
+        Insert.insertTeacherUser("T002", "John Doe", "teacher123", 44);
+
+
 
         JFrame mainframe = new JFrame("Obisis Project");
         mainframe.setSize(600, 630);

@@ -66,13 +66,15 @@ public class SignUp {
             String number = numbertext.getText();
             String password = new String(passwordtext.getPassword());
             String name = nametext.getText();
+            String clases=(String) combo.getSelectedItem();
 
-            if (number.isEmpty() || password.isEmpty() || name.isEmpty()) {
-                JOptionPane.showMessageDialog(signUpFrame, "Number, Name or password is empty");
+
+            if (number.isEmpty() || password.isEmpty() || name.isEmpty() ||clases.isEmpty()) {
+                JOptionPane.showMessageDialog(signUpFrame, "Number, Name, class or password is empty");
             } else if (userExists(number)) {
                 JOptionPane.showMessageDialog(signUpFrame, "This account already exists");
             } else {
-                addUserToDatabase(number, name, password);
+                addUserToDatabase(number, name, password, clases);
                 JOptionPane.showMessageDialog(signUpFrame, "Account Created");
                 new LogIn(signUpFrame);
                 signUpFrame.revalidate();
@@ -107,13 +109,14 @@ public class SignUp {
         }
     }
 
-    private void addUserToDatabase(String number, String name, String password) {
-        String sql = "INSERT INTO users(number, name, password) VALUES(?, ?, ?)";
+    private void addUserToDatabase(String number, String name, String password, String clases) {
+        String sql = "INSERT INTO users(number, name, password, class) VALUES(?, ?, ?,?)";
 
         try (Connection conn = SQLiteConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, number);
             pstmt.setString(2, name);
             pstmt.setString(3, password);
+            pstmt.setString(4, clases);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
