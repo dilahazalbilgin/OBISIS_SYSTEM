@@ -1,16 +1,13 @@
 package visual_project;
 
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.HashMap;
 import javax.swing.*;
 
 public class Visual_Project {
 
-    public static HashMap<String, User> userDatabase = new HashMap<>();
-
     public static void main(String[] args) {
+
+        SQLiteConnection.createTable();
 
         JFrame mainframe = new JFrame("Obisis Project");
         mainframe.setSize(600, 630);

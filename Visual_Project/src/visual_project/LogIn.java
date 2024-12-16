@@ -1,14 +1,16 @@
 package visual_project;
 
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class LogIn {
 
@@ -47,33 +49,27 @@ public class LogIn {
         JButton logInbtn = new JButton("LogIn");
         logInbtn.setBounds(230, 350, 150, 40);
 
-        logInbtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String number = numbertext.getText();
-                String password = new String(passwordtext.getPassword());
-
-                if (number.isEmpty() || password.isEmpty()) {
-                    JOptionPane.showMessageDialog(logFrame, "Empty number or password");
-                } else if (Visual_Project.userDatabase.containsKey(number)
-                        && Visual_Project.userDatabase.get(number).getPassword().equals(password)) {
-                    logFrame.getContentPane().removeAll();
-                    if (!codetext.getText().isEmpty()) {
-                        if (Integer.parseInt(codetext.getText()) == 61) {
-                            new TeacherUser(logFrame);
-                        } else {
-                            JOptionPane.showMessageDialog(logFrame, "Invalid code please try again");
-                            logFrame.revalidate();
-                            logFrame.repaint();
-                        }
+        logInbtn.addActionListener(e -> {
+            
+            if (numbertext.getText().isEmpty() || passwordtext.getPassword().toString().isEmpty()) {
+                JOptionPane.showMessageDialog(logFrame, "Empty number or password");
+            } else if (validateUser(numbertext.getText(), passwordtext.getPassword().toString())) {
+                logFrame.getContentPane().removeAll();
+                if (!codetext.getText().isEmpty()) {
+                    if (Integer.parseInt(codetext.getText()) == 61) {
+                        new TeacherUser(logFrame);
                     } else {
-                        new StudentUser(logFrame);
+                        JOptionPane.showMessageDialog(logFrame, "Invalid code please try again");
+                        logFrame.revalidate();
+                        logFrame.repaint();
                     }
-                    logFrame.revalidate();
-                    logFrame.repaint();
                 } else {
-                    JOptionPane.showMessageDialog(logFrame, "Invalid number or password");
+                    new StudentUser(logFrame);
                 }
+                logFrame.revalidate();
+                logFrame.repaint();
+            } else {
+                JOptionPane.showMessageDialog(logFrame, "Invalid number or password");
             }
         });
 
@@ -115,5 +111,22 @@ public class LogIn {
         logFrame.add(logInlbl);
         logFrame.revalidate();
         logFrame.repaint();
+
+    }
+
+    private boolean validateUser(String number, String password) {
+        try (Connection conn = SQLiteConnection.connect()) {
+            String query = "SELECT password FROM users WHERE number = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                pstmt.setString(1, number);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    return rs.getString("password").equals(password);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

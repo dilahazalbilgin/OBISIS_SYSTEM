@@ -1,8 +1,9 @@
 package visual_project;
 
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import javax.swing.*;
 
 public class SignUp {
@@ -61,24 +62,21 @@ public class SignUp {
 
         JButton registerBtn = new JButton("Register");
         registerBtn.setBounds(230, 390, 120, 40);
-        registerBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String number = numbertext.getText();
-                String password = new String(passwordtext.getPassword());
-                String name = nametext.getText();
+        registerBtn.addActionListener(e -> {
+            String number = numbertext.getText();
+            String password = new String(passwordtext.getPassword());
+            String name = nametext.getText();
 
-                if (number.isEmpty() || password.isEmpty() || name.isEmpty()) {
-                    JOptionPane.showMessageDialog(signUpFrame, "Number, Name or password is empty");
-                } else if (Visual_Project.userDatabase.containsKey(number)) {
-                    JOptionPane.showMessageDialog(signUpFrame, "This account already exists");
-                } else {
-                    Visual_Project.userDatabase.put(number, new User(name, password));
-                    JOptionPane.showMessageDialog(signUpFrame, "Account Created");
-                    new LogIn(signUpFrame);
-                    signUpFrame.revalidate();
-                    signUpFrame.repaint();
-                }
+            if (number.isEmpty() || password.isEmpty() || name.isEmpty()) {
+                JOptionPane.showMessageDialog(signUpFrame, "Number, Name or password is empty");
+            } else if (userExists(number)) {
+                JOptionPane.showMessageDialog(signUpFrame, "This account already exists");
+            } else {
+                addUserToDatabase(number, name, password);
+                JOptionPane.showMessageDialog(signUpFrame, "Account Created");
+                new LogIn(signUpFrame);
+                signUpFrame.revalidate();
+                signUpFrame.repaint();
             }
         });
 
@@ -94,5 +92,32 @@ public class SignUp {
         signUpFrame.revalidate();
         signUpFrame.repaint();
         JOptionPane.showMessageDialog(backLabel, "If you are a teacher, please contact the school to obtain a code.");
+    }
+
+    private boolean userExists(String number) {
+        try (Connection conn = SQLiteConnection.connect()) {
+            String query = "SELECT COUNT(*) FROM users WHERE number = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                pstmt.setString(1, number);
+                return pstmt.executeQuery().getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private void addUserToDatabase(String number, String name, String password) {
+        String sql = "INSERT INTO users(number, name, password) VALUES(?, ?, ?)";
+
+        try (Connection conn = SQLiteConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, number);
+            pstmt.setString(2, name);
+            pstmt.setString(3, password);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -2,6 +2,9 @@ package visual_project;
 
 import java.awt.Font;
 import javax.swing.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class ForgetPassword {
 
@@ -38,13 +41,12 @@ public class ForgetPassword {
 
             if (number.isEmpty()) {
                 JOptionPane.showMessageDialog(forgetPassFrame, "You must enter the number");
-            } else if (!Visual_Project.userDatabase.containsKey(number)) {
+            } else if (!userExists(number)) {
                 JOptionPane.showMessageDialog(forgetPassFrame, "This number is not registered");
             } else if (newPassword.isEmpty() || !newPassword.equals(confirmPassword)) {
                 JOptionPane.showMessageDialog(forgetPassFrame, "Passwords do not match. Please try again.");
             } else {
-                User user = Visual_Project.userDatabase.get(number);
-                user.setPassword(newPassword);
+                resetPassword(number, newPassword);
                 JOptionPane.showMessageDialog(forgetPassFrame, "Password has been reset successfully");
 
                 new LogIn(forgetPassFrame);
@@ -79,5 +81,30 @@ public class ForgetPassword {
 
         forgetPassFrame.revalidate();
         forgetPassFrame.repaint();
+    }
+
+    private boolean userExists(String number) {
+        try (Connection conn = SQLiteConnection.connect()) {
+            String query = "SELECT COUNT(*) FROM users WHERE number = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                pstmt.setString(1, number);
+                return pstmt.executeQuery().getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private void resetPassword(String number, String newPassword) {
+        String sql = "UPDATE users SET password = ? WHERE number = ?";
+
+        try (Connection conn = SQLiteConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, newPassword);
+            pstmt.setString(2, number);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
