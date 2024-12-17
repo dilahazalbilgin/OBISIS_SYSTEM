@@ -61,7 +61,7 @@ public class SQLiteConnection {
     }
 
     public static void insertTeacherUser(String number, String name, String password, int code, String branch) {
-        String sql = "INSERT INTO TeacherUsers(number, name, password, code,branch) VALUES(?, ?, ?, ?,?)";
+        String sql = "INSERT INTO TeacherUsers(number, name, password, code, branch) VALUES(?, ?, ?, ?,?)";
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, number);
@@ -129,9 +129,57 @@ public class SQLiteConnection {
         return lessons;
     }
 
+    public static void createPublicNoticeTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS PublicNotice (\n"
+                + "    name TEXT NOT NULL,\n"
+                + "    notice TEXT NOT NULL,\n"
+                + "    publishedDate DATETIME DEFAULT CURRENT_TIMESTAMP\n"
+                + ");";
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("PublicNotice table created successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error creating PublicNotice table: " + e.getMessage());
+        }
+    }
+
+    public static void insertNotice(String teacherNumber, String noticeText) {
+        String getTeacherNameSQL = "SELECT name FROM TeacherUsers WHERE number = ?";
+        String teacherName = null;
+
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(getTeacherNameSQL)) {
+            pstmt.setString(1, teacherNumber);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                teacherName = rs.getString("name");
+            } else {
+                System.out.println("Teacher not found with number: " + teacherNumber);
+                return;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching teacher name: " + e.getMessage());
+            return;
+        }
+
+        if (teacherName != null) {
+            String sql = "INSERT INTO PublicNotice (notice, name) VALUES (?, ?)";
+            try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, noticeText);
+                pstmt.setString(2, teacherName);
+                pstmt.executeUpdate();
+                System.out.println("Notice inserted into the database.");
+            } catch (SQLException e) {
+                System.out.println("Error inserting notice: " + e.getMessage());
+            }
+        }
+    }
+
     public static void create() {
         SQLiteConnection.createTable();
         SQLiteConnection.createTeacherTable();
+        SQLiteConnection.createPublicNoticeTable();
         SQLiteConnection.createConfirmedStudentLessonsTable();
         SQLiteConnection.insertTeacherUser("00", "ali", "00", 0, "Math");
         SQLiteConnection.insertTeacherUser("11", "mustafa", "11", 1, "Differantial");

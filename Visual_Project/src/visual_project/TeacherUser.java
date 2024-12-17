@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class TeacherUser {
 
-    public TeacherUser(JFrame teacherFrame, String branch) {
+    public TeacherUser(JFrame teacherFrame, String branch, String name) {
         teacherFrame.setTitle("Teacher Page");
         teacherFrame.getContentPane().removeAll();
 
@@ -51,12 +51,16 @@ public class TeacherUser {
                         if (!noticearea.getText().isEmpty()) {
                             int response = JOptionPane.showConfirmDialog(teacherFrame, "Do you want to publish this notice?\n " + noticearea.getText(), "Alert", JOptionPane.YES_NO_OPTION);
                             if (response == JOptionPane.YES_OPTION) {
-                                JOptionPane.showMessageDialog(teacherFrame, "You published!");
-                            } else if (response == JOptionPane.NO_OPTION) {
-
+                                String teacherNumber = JOptionPane.showInputDialog(teacherFrame, "Please enter your teacher number:");
+                                if (teacherNumber != null && !teacherNumber.isEmpty()) {
+                                    SQLiteConnection.insertNotice(teacherNumber, noticearea.getText());
+                                    JOptionPane.showMessageDialog(teacherFrame, "You published!");
+                                } else {
+                                    JOptionPane.showMessageDialog(teacherFrame, "You didn't enter a valid teacher number!");
+                                }
                             }
                         } else {
-                            JOptionPane.showMessageDialog(teacherFrame, "You didn't write anythink.If you want to publish notice please write the notice!");
+                            JOptionPane.showMessageDialog(teacherFrame, "You didn't write anything. If you want to publish notice please write the notice!");
                         }
                     }
                 });

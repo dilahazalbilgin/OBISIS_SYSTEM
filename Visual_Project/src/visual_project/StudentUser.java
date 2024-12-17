@@ -215,7 +215,7 @@ public class StudentUser {
                         String lecture = (String) model.getValueAt(rowIndex, 1);
 
                         hasSelection = true;
-                        SQLiteConnection.insertConfirmedStudentLessonForStudent(number, day, hour, lecture); // Veritabanına ekleme
+                        SQLiteConnection.insertConfirmedStudentLessonForStudent(number, day, hour, lecture);
                     }
                 }
 
@@ -257,7 +257,6 @@ public class StudentUser {
                 }
             }
 
-            // Tablo modeli oluştur
             DefaultTableModel model = new DefaultTableModel(new String[]{"Number", "Day", "Hour", "Lecture"}, 0);
             JTable noteTable = new JTable(model);
             JScrollPane noteScroll = new JScrollPane(noteTable);

@@ -61,14 +61,17 @@ public class LogIn {
                 } else if (!codetext.getText().isEmpty()) {
                     int code = Integer.parseInt(codetext.getText());
                     if (validateTeacher(number, password, code)) {
-                        String branch = getTeacherBranch(number, password, code);
-                        if (branch != null) {
+                        String[] teacherInfo = getTeacherInfo(number, password, code);
+                        if (teacherInfo != null) {
+                            String name = teacherInfo[0];
+                            String branch = teacherInfo[1];
+
                             logFrame.getContentPane().removeAll();
-                            new TeacherUser(logFrame, branch);
+                            new TeacherUser(logFrame, branch, name); // name artık burada tanımlı
                             logFrame.revalidate();
                             logFrame.repaint();
                         } else {
-                            JOptionPane.showMessageDialog(logFrame, "Unable to retrieve branch information.");
+                            JOptionPane.showMessageDialog(logFrame, "Unable to retrieve teacher information.");
                         }
                     } else {
                         JOptionPane.showMessageDialog(logFrame, "Invalid teacher credentials or code");
@@ -177,16 +180,16 @@ public class LogIn {
         return null;
     }
 
-    private String getTeacherBranch(String number, String password, int code) {
+    private String[] getTeacherInfo(String number, String password, int code) {
         try (Connection conn = SQLiteConnection.connect()) {
-            String query = "SELECT branch FROM TeacherUsers WHERE number = ? AND password = ? AND code = ?";
+            String query = "SELECT name, branch FROM TeacherUsers WHERE number = ? AND password = ? AND code = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                 pstmt.setString(1, number);
                 pstmt.setString(2, password);
                 pstmt.setInt(3, code);
                 ResultSet rs = pstmt.executeQuery();
                 if (rs.next()) {
-                    return rs.getString("branch");
+                    return new String[]{rs.getString("name"), rs.getString("branch")};
                 }
             }
         } catch (SQLException e) {
