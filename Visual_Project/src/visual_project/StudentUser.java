@@ -15,7 +15,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class StudentUser {
 
-    public StudentUser(JFrame studentFrame) {
+    public StudentUser(JFrame studentFrame, String number, String name, String clases) {
         studentFrame.setTitle("Student Page");
         studentFrame.getContentPane().removeAll();
 
@@ -75,18 +75,22 @@ public class StudentUser {
             studentFrame.revalidate();
             studentFrame.repaint();
 
-            DefaultTableModel model = new DefaultTableModel(new String[]{"Number", "Name", "Surname", "Lecture", "Attendance"}, 0);
-            JTable noteTable = new JTable(model);
-            JScrollPane noteScroll = new JScrollPane(noteTable);
-            noteScroll.setBounds(180, 80, 370, 380);
+            String[] columnNames = {"Number", "Name", "Class", "Lecture", "Attendance"};
+        Object[][] data = {
+            {number, name, clases, "Math", "Continous"},
+            {number, name, clases, "Linear Algebra", "Continous"},
+            {number, name, clases, "Differential Equations", "NotContinous"},
+            {number, name, clases, "Programming", "NotContinous"},
+            {number, name, clases, "Numerical Analysis", "Continous"}
+        };
 
-            model.addRow(new Object[]{"61", "Dila", "Bilgin", "Math", "Continous"});
-            model.addRow(new Object[]{"61", "Dila", "Bilgin", "Linear", "Continous"});
-            model.addRow(new Object[]{"61", "Dila", "Bilgin", "Differantial", "NotContinous"});
-            model.addRow(new Object[]{"61", "Dila", "Bilgin", "Programing", "NotContinous"});
-            model.addRow(new Object[]{"61", "Dila", "Bilgin", "Numeric", "Continous"});
-
-            studentFrame.add(noteScroll);
+        JTable table = new JTable(data, columnNames);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(180, 80, 370, 380);
+        studentFrame.add(scrollPane);
+        
+         studentFrame.revalidate();
+        studentFrame.repaint();
         });
 
         JButton notebtn = new JButton("Note");

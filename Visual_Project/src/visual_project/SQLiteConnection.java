@@ -10,7 +10,7 @@ public class SQLiteConnection {
 
     public static Connection connect() {
         try {
-            String url = "jdbc:sqlite:new_database.db";
+            String url = "jdbc:sqlite:db_";
             Connection conn = DriverManager.getConnection(url);
             System.out.println("Connection to SQLite has been established.");
             return conn;

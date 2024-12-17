@@ -58,7 +58,7 @@ public class LogIn {
 
                 if (number.isEmpty() || password.isEmpty()) {
                     JOptionPane.showMessageDialog(logFrame, "Empty number or password");
-                } else if (!codetext.getText().isEmpty()) { // Teacher login attempt
+                } else if (!codetext.getText().isEmpty()) {
                     int code = Integer.parseInt(codetext.getText());
                     if (validateTeacher(number, password, code)) {
                         logFrame.getContentPane().removeAll();
@@ -68,11 +68,14 @@ public class LogIn {
                     } else {
                         JOptionPane.showMessageDialog(logFrame, "Invalid teacher credentials or code");
                     }
-                } else if (validateUser(number, password)) { // Student login
-                    logFrame.getContentPane().removeAll();
-                    new StudentUser(logFrame);
-                    logFrame.revalidate();
-                    logFrame.repaint();
+                } else if (validateStudent(number, password)) {
+                    String[] userInfo = getStudentInfo(number, password);
+                    if (userInfo != null) {
+                        logFrame.getContentPane().removeAll();
+                        new StudentUser(logFrame, userInfo[0], userInfo[1], userInfo[2]); // Kullanıcı bilgilerini gönder
+                        logFrame.revalidate();
+                        logFrame.repaint();
+                    }
                 } else {
                     JOptionPane.showMessageDialog(logFrame, "Invalid number or password");
                 }
@@ -136,7 +139,7 @@ public class LogIn {
         return false;
     }
 
-    private boolean validateUser(String number, String password) {
+    private boolean validateStudent(String number, String password) {
         try (Connection conn = SQLiteConnection.connect()) {
             String query = "SELECT password FROM users WHERE number = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -151,4 +154,22 @@ public class LogIn {
         }
         return false;
     }
+    private String[] getStudentInfo(String number, String password) {
+    try (Connection conn = SQLiteConnection.connect()) {
+        String query = "SELECT number, name, class FROM users WHERE number = ? AND password = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, number);
+            pstmt.setString(2, password);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                // Kullanıcı bilgilerini dizi olarak döndür
+                return new String[]{rs.getString("number"), rs.getString("name"), rs.getString("class")};
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null; // Kullanıcı bulunamazsa null döndür
+}
+
 }
