@@ -61,10 +61,15 @@ public class LogIn {
                 } else if (!codetext.getText().isEmpty()) {
                     int code = Integer.parseInt(codetext.getText());
                     if (validateTeacher(number, password, code)) {
-                        logFrame.getContentPane().removeAll();
-                        new TeacherUser(logFrame);
-                        logFrame.revalidate();
-                        logFrame.repaint();
+                        String branch = getTeacherBranch(number, password, code);
+                        if (branch != null) {
+                            logFrame.getContentPane().removeAll();
+                            new TeacherUser(logFrame, branch);
+                            logFrame.revalidate();
+                            logFrame.repaint();
+                        } else {
+                            JOptionPane.showMessageDialog(logFrame, "Unable to retrieve branch information.");
+                        }
                     } else {
                         JOptionPane.showMessageDialog(logFrame, "Invalid teacher credentials or code");
                     }
@@ -72,7 +77,7 @@ public class LogIn {
                     String[] userInfo = getStudentInfo(number, password);
                     if (userInfo != null) {
                         logFrame.getContentPane().removeAll();
-                        new StudentUser(logFrame, userInfo[0], userInfo[1], userInfo[2]); // Kullanıcı bilgilerini gönder
+                        new StudentUser(logFrame, userInfo[0], userInfo[1], userInfo[2]);
                         logFrame.revalidate();
                         logFrame.repaint();
                     }
@@ -154,22 +159,40 @@ public class LogIn {
         }
         return false;
     }
+
     private String[] getStudentInfo(String number, String password) {
-    try (Connection conn = SQLiteConnection.connect()) {
-        String query = "SELECT number, name, class FROM users WHERE number = ? AND password = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, number);
-            pstmt.setString(2, password);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                // Kullanıcı bilgilerini dizi olarak döndür
-                return new String[]{rs.getString("number"), rs.getString("name"), rs.getString("class")};
+        try (Connection conn = SQLiteConnection.connect()) {
+            String query = "SELECT number, name, class FROM users WHERE number = ? AND password = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                pstmt.setString(1, number);
+                pstmt.setString(2, password);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    return new String[]{rs.getString("number"), rs.getString("name"), rs.getString("class")};
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return null;
     }
-    return null; // Kullanıcı bulunamazsa null döndür
-}
+
+    private String getTeacherBranch(String number, String password, int code) {
+        try (Connection conn = SQLiteConnection.connect()) {
+            String query = "SELECT branch FROM TeacherUsers WHERE number = ? AND password = ? AND code = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                pstmt.setString(1, number);
+                pstmt.setString(2, password);
+                pstmt.setInt(3, code);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    return rs.getString("branch");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

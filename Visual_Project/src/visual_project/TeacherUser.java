@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class TeacherUser {
 
-    public TeacherUser(JFrame teacherFrame) {
+    public TeacherUser(JFrame teacherFrame, String branch) {
         teacherFrame.setTitle("Teacher Page");
         teacherFrame.getContentPane().removeAll();
 
@@ -91,39 +91,39 @@ public class TeacherUser {
             Map<String, Object[][]> classData = new HashMap<>();
             combo.setSelectedIndex(0);
             classData.put("P", new Object[][]{
-                {"10", "Ali", "Kara", "Math", "0"},
-                {"5", "Ahmet", "Kılıç", "Math", "0"},
-                {"20", "Ayşe", "Koç", "Math", "0"},
-                {"15", "Mehmet", "Yılmaz", "Math", "0"},
-                {"8", "Fatma", "Çelik", "Math", "0"}
+                {"10", "Ali", "Kara", branch, "0"},
+                {"5", "Ahmet", "Kılıç", branch, "0"},
+                {"20", "Ayşe", "Koç", branch, "0"},
+                {"15", "Mehmet", "Yılmaz", branch, "0"},
+                {"8", "Fatma", "Çelik", branch, "0"}
             });
             classData.put("1", new Object[][]{
-                {"15", "Mehmet", "Yılmaz", "Math", "0"},
-                {"8", "Fatma", "Çelik", "Math", "0"},
-                {"50", "Ali", "Kara", "Math", "0"},
-                {"51", "Ahmet", "Kılıç", "Math", "0"},
-                {"52", "Ayşe", "Koç", "Math", "0"}
+                {"15", "Mehmet", "Yılmaz", branch, "0"},
+                {"8", "Fatma", "Çelik", branch, "0"},
+                {"50", "Ali", "Kara", branch, "0"},
+                {"51", "Ahmet", "Kılıç", branch, "0"},
+                {"52", "Ayşe", "Koç", branch, "0"}
             });
             classData.put("2", new Object[][]{
-                {"22", "Zeynep", "Demir", "Math", "0"},
-                {"50", "Ali", "Kara", "Math", "0"},
-                {"51", "Ahmet", "Kılıç", "Math", "0"},
-                {"52", "Ayşe", "Koç", "Math", "0"}
+                {"22", "Zeynep", "Demir", branch, "0"},
+                {"50", "Ali", "Kara", branch, "0"},
+                {"51", "Ahmet", "Kılıç", branch, "0"},
+                {"52", "Ayşe", "Koç", branch, "0"}
             });
             classData.put("3", new Object[][]{
-                {"50", "Ali", "Kara", "Math", "0"},
-                {"51", "Ahmet", "Kılıç", "Math", "0"},
-                {"52", "Ayşe", "Koç", "Math", "0"},
-                {"78", "Ali", "Kara", "Math", "0"},
-                {"67", "Ahmet", "Kılıç", "Math", "0"}
+                {"50", "Ali", "Kara", branch, "0"},
+                {"51", "Ahmet", "Kılıç", branch, "0"},
+                {"52", "Ayşe", "Koç", branch, "0"},
+                {"78", "Ali", "Kara", branch, "0"},
+                {"67", "Ahmet", "Kılıç", branch, "0"}
             });
             classData.put("4", new Object[][]{
-                {"78", "Ali", "Kara", "Math", "0"},
-                {"67", "Ahmet", "Kılıç", "Math", "0"},
-                {"22", "Zeynep", "Demir", "Math", "0"},
-                {"50", "Ali", "Kara", "Math", "0"},
-                {"51", "Ahmet", "Kılıç", "Math", "0"},
-                {"52", "Ayşe", "Koç", "Math", "0"}
+                {"78", "Ali", "Kara", branch, "0"},
+                {"67", "Ahmet", "Kılıç", branch, "0"},
+                {"22", "Zeynep", "Demir", branch, "0"},
+                {"50", "Ali", "Kara", branch, "0"},
+                {"51", "Ahmet", "Kılıç", branch, "0"},
+                {"52", "Ayşe", "Koç", branch, "0"}
             });
 
             combo.addActionListener(event -> {
@@ -274,40 +274,37 @@ public class TeacherUser {
             Map<String, Object[][]> classData = new HashMap<>();
             combo.setSelectedIndex(0);
             classData.put("P", new Object[][]{
-                {"10", "Ali", "Kara", "Math", "0"},
-                {"5", "Ahmet", "Kılıç", "Math", "0"},
-                {"20", "Ayşe", "Koç", "Math", "0"},
-                {"15", "Mehmet", "Yılmaz", "Math", "0"},
-                {"8", "Fatma", "Çelik", "Math", "0"}
+                {"10", "Ali", "Kara", branch, "0"},
+                {"5", "Ahmet", "Kılıç", branch, "0"},
+                {"20", "Ayşe", "Koç", branch, "0"},
+                {"15", "Mehmet", "Yılmaz", branch, "0"},
+                {"8", "Fatma", "Çelik", branch, "0"}
             });
             classData.put("1", new Object[][]{
-                {"15", "Mehmet", "Yılmaz", "Math", "0"},
-                {"8", "Fatma", "Çelik", "Math", "0"},
-                {"10", "Ali", "Kara", "Math", "0"},
-                {"5", "Ahmet", "Kılıç", "Math", "0"},
-                {"20", "Ayşe", "Koç", "Math", "0"}
+                {"15", "Mehmet", "Yılmaz", branch, "0"},
+                {"8", "Fatma", "Çelik", branch, "0"},
+                {"10", "Ali", "Kara", branch, "0"},
+                {"5", "Ahmet", "Kılıç", branch, "0"},
+                {"20", "Ayşe", "Koç", branch, "0"}
             });
             classData.put("2", new Object[][]{
-                {"22", "Zeynep", "Demir", "Math", "0"},
-                {"10", "Ali", "Kara", "Math", "0"},
-                {"5", "Ahmet", "Kılıç", "Math", "0"},
-                {"20", "Ayşe", "Koç", "Math", "0"},
-            });
+                {"22", "Zeynep", "Demir", branch, "0"},
+                {"10", "Ali", "Kara", branch, "0"},
+                {"5", "Ahmet", "Kılıç", branch, "0"},
+                {"20", "Ayşe", "Koç", branch, "0"},});
             classData.put("3", new Object[][]{
-                {"50", "Ali", "Kara", "Math", "0"},
-                {"51", "Ahmet", "Kılıç", "Math", "0"},
-                {"52", "Ayşe", "Koç", "Math", "0"},
-                {"10", "Ali", "Kara", "Math", "0"},
-                {"5", "Ahmet", "Kılıç", "Math", "0"},
-                {"20", "Ayşe", "Koç", "Math", "0"},
-            });
+                {"50", "Ali", "Kara", branch, "0"},
+                {"51", "Ahmet", "Kılıç", branch, "0"},
+                {"52", "Ayşe", "Koç", branch, "0"},
+                {"10", "Ali", "Kara", branch, "0"},
+                {"5", "Ahmet", "Kılıç", branch, "0"},
+                {"20", "Ayşe", "Koç", branch, "0"},});
             classData.put("4", new Object[][]{
-                {"78", "Ali", "Kara", "Math", "0"},
-                {"67", "Ahmet", "Kılıç", "Math", "0"},
-                {"10", "Ali", "Kara", "Math", "0"},
-                {"5", "Ahmet", "Kılıç", "Math", "0"},
-                {"20", "Ayşe", "Koç", "Math", "0"},
-            });
+                {"78", "Ali", "Kara", branch, "0"},
+                {"67", "Ahmet", "Kılıç", branch, "0"},
+                {"10", "Ali", "Kara", branch, "0"},
+                {"5", "Ahmet", "Kılıç", branch, "0"},
+                {"20", "Ayşe", "Koç", branch, "0"},});
 
             combo.addActionListener(event -> {
                 String selectedClass = (String) combo.getSelectedItem();
@@ -482,8 +479,7 @@ public class TeacherUser {
             list2.setBounds(200, 220, 300, 200);
             JButton selectbtn = new JButton("Select");
             selectbtn.setBounds(450, 180, 100, 30);
-            
-            
+
             selectbtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -503,41 +499,40 @@ public class TeacherUser {
                     }
                 }
             });
-            
-            
+
             List<String> selectedLessons = new ArrayList<>();
-            
+
             JButton approvebtn = new JButton("Aprove");
             approvebtn.setBounds(450, 520, 100, 30);
             approvebtn.addActionListener(new ActionListener() {
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (model.getSize() >= 3) {
-            StringBuilder listContent = new StringBuilder();
-            for (int i = 0; i < model.getSize(); i++) {
-                listContent.append(model.getElementAt(i)).append("\n");
-            }
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (model.getSize() >= 3) {
+                        StringBuilder listContent = new StringBuilder();
+                        for (int i = 0; i < model.getSize(); i++) {
+                            listContent.append(model.getElementAt(i)).append("\n");
+                        }
 
-            selectedLessons.clear(); 
-            for (int i = 0; i < model.getSize(); i++) {
-                selectedLessons.add(model.getElementAt(i).toString());
-            }
+                        selectedLessons.clear();
+                        for (int i = 0; i < model.getSize(); i++) {
+                            selectedLessons.add(model.getElementAt(i).toString());
+                        }
 
-            int response = JOptionPane.showConfirmDialog(
-                    teacherFrame,
-                    "Do you want to approve this list?\n" + listContent,
-                    "Alert",
-                    JOptionPane.YES_NO_OPTION
-            );
+                        int response = JOptionPane.showConfirmDialog(
+                                teacherFrame,
+                                "Do you want to approve this list?\n" + listContent,
+                                "Alert",
+                                JOptionPane.YES_NO_OPTION
+                        );
 
-            if (response == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(teacherFrame, "Program approved!");
-            }
-        } else {
-            JOptionPane.showMessageDialog(teacherFrame, "You must select at least 3 items before approving.");
-        }
-    }
-});
+                        if (response == JOptionPane.YES_OPTION) {
+                            JOptionPane.showMessageDialog(teacherFrame, "Program approved!");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(teacherFrame, "You must select at least 3 items before approving.");
+                    }
+                }
+            });
 
             teacherFrame.add(approvebtn);
             teacherFrame.add(deletebtn);
@@ -561,9 +556,9 @@ public class TeacherUser {
             JScrollPane noteScroll = new JScrollPane(noteTable);
             noteScroll.setBounds(180, 80, 370, 380);
             teacherFrame.add(noteScroll);
-            model.addRow(new Object[]{"Monday", "12.00-14.00", "Calculus"});
-            model.addRow(new Object[]{"Wednesday", "13.00-15.00", "Calculus"});
-            model.addRow(new Object[]{"Friday", "09.00-11.00", "Calculus"});
+            model.addRow(new Object[]{"Monday", "12.00-14.00", branch});
+            model.addRow(new Object[]{"Wednesday", "13.00-15.00", branch});
+            model.addRow(new Object[]{"Friday", "09.00-11.00", branch});
             teacherFrame.revalidate();
             teacherFrame.repaint();
 

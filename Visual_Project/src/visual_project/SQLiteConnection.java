@@ -46,7 +46,8 @@ public class SQLiteConnection {
                 + "    number TEXT PRIMARY KEY,\n"
                 + "    name TEXT NOT NULL,\n"
                 + "    password TEXT NOT NULL,\n"
-                + "    code INTEGER NOT NULL\n"
+                + "    code INTEGER NOT NULL,\n"
+                + "     branch TEXT NOT NULL"
                 + ");";
 
         try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
@@ -57,14 +58,15 @@ public class SQLiteConnection {
         }
     }
 
-    public static void insertTeacherUser(String number, String name, String password, int code) {
-        String sql = "INSERT INTO TeacherUsers(number, name, password, code) VALUES(?, ?, ?, ?)";
+    public static void insertTeacherUser(String number, String name, String password, int code, String branch) {
+        String sql = "INSERT INTO TeacherUsers(number, name, password, code,branch) VALUES(?, ?, ?, ?,?)";
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, number);
             pstmt.setString(2, name);
             pstmt.setString(3, password);
             pstmt.setInt(4, code);
+            pstmt.setString(5, branch);
             pstmt.executeUpdate();
             System.out.println("Teacher user added successfully.");
         } catch (SQLException e) {

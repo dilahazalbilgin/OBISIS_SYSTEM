@@ -76,7 +76,7 @@ public class StudentUser {
             studentFrame.repaint();
 
             String[] columnNames = {"Number", "Name", "Class", "Lecture", "Attendance"};
-        Object[][] data = {
+            Object[][] data = {
             {number, name, clases, "Math", "Continous"},
             {number, name, clases, "Linear Algebra", "Continous"},
             {number, name, clases, "Differential Equations", "NotContinous"},
@@ -100,17 +100,17 @@ public class StudentUser {
             studentFrame.getContentPane().removeAll();
             studentFrame.add(btnpanel);
 
-            DefaultTableModel model = new DefaultTableModel(new String[]{"Number", "Name", "Surname", "Lecture", "Note"}, 0);
+            DefaultTableModel model = new DefaultTableModel(new String[]{"Number", "Name", "Class", "Lecture", "Note"}, 0);
             JTable noteTable = new JTable(model);
             JScrollPane noteScroll = new JScrollPane(noteTable);
             noteScroll.setBounds(180, 80, 370, 380);
             studentFrame.add(noteScroll);
 
-            model.addRow(new Object[]{"61", "Dila", "Bilgin", "Math", "45"});
-            model.addRow(new Object[]{"61", "Dila", "Bilgin", "Linear", "73"});
-            model.addRow(new Object[]{"61", "Dila", "Bilgin", "Differantial", "30"});
-            model.addRow(new Object[]{"61", "Dila", "Bilgin", "Programing", "70"});
-            model.addRow(new Object[]{"61", "Dila", "Bilgin", "Numeric", "90"});
+            model.addRow(new Object[]{number, name, clases, "Math", "45"});
+            model.addRow(new Object[]{number, name, clases, "Linear", "73"});
+            model.addRow(new Object[]{number, name, clases, "Differantial", "30"});
+            model.addRow(new Object[]{number, name, clases, "Programing", "70"});
+            model.addRow(new Object[]{number, name, clases, "Numeric", "90"});
 
             studentFrame.revalidate();
             studentFrame.repaint();
