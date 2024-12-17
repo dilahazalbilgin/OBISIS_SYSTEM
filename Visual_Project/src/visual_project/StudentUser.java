@@ -12,6 +12,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import visual_project.SQLiteConnection;
 
 public class StudentUser {
 
@@ -77,20 +78,20 @@ public class StudentUser {
 
             String[] columnNames = {"Number", "Name", "Class", "Lecture", "Attendance"};
             Object[][] data = {
-            {number, name, clases, "Math", "Continous"},
-            {number, name, clases, "Linear Algebra", "Continous"},
-            {number, name, clases, "Differential Equations", "NotContinous"},
-            {number, name, clases, "Programming", "NotContinous"},
-            {number, name, clases, "Numerical Analysis", "Continous"}
-        };
+                {number, name, clases, "Math", "Continous"},
+                {number, name, clases, "Linear Algebra", "Continous"},
+                {number, name, clases, "Differential Equations", "NotContinous"},
+                {number, name, clases, "Programming", "NotContinous"},
+                {number, name, clases, "Numerical Analysis", "Continous"}
+            };
 
-        JTable table = new JTable(data, columnNames);
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(180, 80, 370, 380);
-        studentFrame.add(scrollPane);
-        
-         studentFrame.revalidate();
-        studentFrame.repaint();
+            JTable table = new JTable(data, columnNames);
+            JScrollPane scrollPane = new JScrollPane(table);
+            scrollPane.setBounds(180, 80, 370, 380);
+            studentFrame.add(scrollPane);
+
+            studentFrame.revalidate();
+            studentFrame.repaint();
         });
 
         JButton notebtn = new JButton("Note");
@@ -141,22 +142,22 @@ public class StudentUser {
             studentFrame.add(selectProgrameScroll);
 
             Object[][] allRows = {
-                {"61", "Math", "12.00-14.00", "Monday", false},
-                {"61", "Math", "14.00-16.00", "Friday", false},
-                {"61", "Math", "11.00-13.00", "Monday", false},
-                {"61", "Calculus", "12.00-14.00", "Monday", false},
-                {"61", "Calculus", "09.00-11.00", "Monday", false},
-                {"61", "Diff", "12.00-14.00", "Friday", false},
-                {"61", "Programming", "10.00-12.00", "Monday", false},
-                {"61", "Programming", "12.00-14.00", "Monday", false},
-                {"61", "Numeric", "12.00-14.00", "Wednesday", false},
-                {"61", "Numeric", "11.00-13.00", "Tuesday", false},
-                {"61", "Numeric", "09.00-11.00", "Thursday", false},
-                {"61", "Numeric", "12.00-14.00", "Monday", false},
-                {"61", "Linear", "08.00-10.00", "Monday", false},
-                {"61", "Linear", "11.00-13.00", "Thursday", false},
-                {"61", "Linear", "09.00-11.00", "Wednesday", false},
-                {"61", "Linear", "12.00-14.00", "Thursday", false}
+                {number, "Math", "12.00-14.00", "Monday", false},
+                {number, "Math", "14.00-16.00", "Friday", false},
+                {number, "Math", "11.00-13.00", "Monday", false},
+                {number, "Calculus", "12.00-14.00", "Monday", false},
+                {number, "Calculus", "09.00-11.00", "Monday", false},
+                {number, "Diff", "12.00-14.00", "Friday", false},
+                {number, "Programming", "10.00-12.00", "Monday", false},
+                {number, "Programming", "12.00-14.00", "Monday", false},
+                {number, "Numeric", "12.00-14.00", "Wednesday", false},
+                {number, "Numeric", "11.00-13.00", "Tuesday", false},
+                {number, "Numeric", "09.00-11.00", "Thursday", false},
+                {number, "Numeric", "12.00-14.00", "Monday", false},
+                {number, "Linear", "08.00-10.00", "Monday", false},
+                {number, "Linear", "11.00-13.00", "Thursday", false},
+                {number, "Linear", "09.00-11.00", "Wednesday", false},
+                {number, "Linear", "12.00-14.00", "Thursday", false}
             };
 
             for (Object[] row : allRows) {
@@ -180,7 +181,6 @@ public class StudentUser {
             searchbtn.addActionListener(e1 -> {
                 String searchTerm = searchField.getText().toLowerCase();
 
-                // Tüm satırları sakla
                 for (int i = 0; i < model.getRowCount(); i++) {
                     String key = (String) model.getValueAt(i, 1);
                     Boolean isSelected = (Boolean) model.getValueAt(i, 4);
@@ -210,47 +210,28 @@ public class StudentUser {
                 for (int rowIndex = 0; rowIndex < model.getRowCount(); rowIndex++) {
                     Boolean isSelected = (Boolean) model.getValueAt(rowIndex, 4);
                     if (isSelected != null && isSelected) {
+                        String day = (String) model.getValueAt(rowIndex, 3);
+                        String hour = (String) model.getValueAt(rowIndex, 2);
+                        String lecture = (String) model.getValueAt(rowIndex, 1);
+
                         hasSelection = true;
-                        Object lecture = model.getValueAt(rowIndex, 1);
-                        Object hour = model.getValueAt(rowIndex, 2);
-                        Object day = model.getValueAt(rowIndex, 3);
-
-                        confirmedLessons.add(new Object[]{day, hour, lecture});
-
-                        selectedLessons.append("- ").append(lecture)
-                                .append(" (").append(hour).append(", ").append(day).append(")\n");
+                        SQLiteConnection.insertConfirmedStudentLessonForStudent(number, day, hour, lecture); // Veritabanına ekleme
                     }
                 }
 
                 if (hasSelection) {
-                    int confirmation = JOptionPane.showConfirmDialog(
-                            studentFrame,
-                            selectedLessons.toString() + "\nDo you confirm your selection?",
-                            "Confirm Selection",
-                            JOptionPane.YES_NO_OPTION
+                    int confirmation = JOptionPane.showConfirmDialog(studentFrame, selectedLessons.toString() + "\nDo you confirm your selection?", "Confirm Selection", JOptionPane.YES_NO_OPTION
                     );
 
                     if (confirmation == JOptionPane.YES_OPTION) {
-                        JOptionPane.showMessageDialog(
-                                studentFrame,
-                                "Selection confirmed.You can check Programe Button\nThank you!",
-                                "Confirmation",
-                                JOptionPane.INFORMATION_MESSAGE
+                        JOptionPane.showMessageDialog(studentFrame, "Selection confirmed.You can check Programe Button\nThank you!", "Confirmation", JOptionPane.INFORMATION_MESSAGE
                         );
                     } else {
-                        JOptionPane.showMessageDialog(
-                                studentFrame,
-                                "Selection was not confirmed.",
-                                "Canceled",
-                                JOptionPane.WARNING_MESSAGE
+                        JOptionPane.showMessageDialog(studentFrame, "Selection was not confirmed.", "Canceled", JOptionPane.WARNING_MESSAGE
                         );
                     }
                 } else {
-                    JOptionPane.showMessageDialog(
-                            studentFrame,
-                            "No lessons selected. Please select at least one lesson.",
-                            "Warning",
-                            JOptionPane.WARNING_MESSAGE
+                    JOptionPane.showMessageDialog(studentFrame, "No lessons selected. Please select at least one lesson.", "Warning", JOptionPane.WARNING_MESSAGE
                     );
                 }
             });
@@ -267,13 +248,23 @@ public class StudentUser {
             studentFrame.add(btnpanel);
             JOptionPane.showMessageDialog(studentFrame, "You can see the program after the teacher and student approve it.");
 
-            DefaultTableModel model = new DefaultTableModel(new String[]{"Day", "Hour", "Lecture"}, 0);
+            List<Object[]> confirmedStudentLessons = SQLiteConnection.getconfirmedStudentLessons();
+
+            List<Object[]> studentLessons = new ArrayList<>();
+            for (Object[] lesson : confirmedStudentLessons) {
+                if (lesson[0].equals(number)) {
+                    studentLessons.add(lesson);
+                }
+            }
+
+            // Tablo modeli oluştur
+            DefaultTableModel model = new DefaultTableModel(new String[]{"Number", "Day", "Hour", "Lecture"}, 0);
             JTable noteTable = new JTable(model);
             JScrollPane noteScroll = new JScrollPane(noteTable);
             noteScroll.setBounds(180, 80, 370, 380);
             studentFrame.add(noteScroll);
 
-            for (Object[] lesson : confirmedLessons) {
+            for (Object[] lesson : studentLessons) {
                 model.addRow(lesson);
             }
 
