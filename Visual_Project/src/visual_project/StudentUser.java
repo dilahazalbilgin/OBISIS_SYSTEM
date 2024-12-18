@@ -48,9 +48,10 @@ public class StudentUser {
                 JScrollPane scrollPane = new JScrollPane(list);
                 scrollPane.setBounds(200, 80, 330, 450);
 
-                model.addElement("Notice 1: School will be closed tomorrow.".toUpperCase(Locale.ITALY));
-                model.addElement("Notice 2: Parent-teacher meetings scheduled for Friday.".toUpperCase(Locale.ITALY));
-                model.addElement("Notice 3: New library books available for checkout.".toUpperCase(Locale.ITALY));
+                List<String> notices = SqlConnect.fetchPublicNotices();
+                for (String notice : notices) {
+                    model.addElement(notice);
+                }
 
                 list.addListSelectionListener(e1 -> {
                     if (!e1.getValueIsAdjusting()) {
@@ -287,10 +288,10 @@ public class StudentUser {
             scrollPane.setBounds(200, 80, 330, 450);
             studentFrame.add(scrollPane);
 
-            model.addElement("Notice 1: School will be closed tomorrow.".toUpperCase(Locale.ITALY));
-            model.addElement("Notice 2: Parent-teacher meetings scheduled for Friday.".toUpperCase(Locale.ITALY));
-            model.addElement("Notice 3: New library books available for checkout.".toUpperCase(Locale.ITALY));
-
+            List<String> notices = SqlConnect.fetchPrivateNotices(clases);
+            for (String notice : notices) {
+                model.addElement(notice);
+            }
             list.addListSelectionListener(e1 -> {
                 if (!e1.getValueIsAdjusting()) {
                     String selectedNotice = list.getSelectedValue();
