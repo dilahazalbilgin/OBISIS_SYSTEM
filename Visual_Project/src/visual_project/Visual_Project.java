@@ -6,7 +6,6 @@ import javax.swing.*;
 public class Visual_Project {
 
     public static void main(String[] args) {
-
         SqlConnect.create();
 
         JFrame mainframe = new JFrame("Obisis Project");
