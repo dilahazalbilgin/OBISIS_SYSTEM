@@ -7,7 +7,7 @@ public class Visual_Project {
 
     public static void main(String[] args) {
 
-        SQLiteConnection.create();
+        SqlConnect.create();
 
         JFrame mainframe = new JFrame("Obisis Project");
         mainframe.setSize(600, 630);

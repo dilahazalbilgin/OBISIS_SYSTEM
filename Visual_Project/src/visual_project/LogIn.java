@@ -132,7 +132,7 @@ public class LogIn {
     }
 
     private boolean validateTeacher(String number, String password, int code) {
-        try (Connection conn = SQLiteConnection.connect()) {
+        try (Connection conn = SqlConnect.connect()) {
             String query = "SELECT password, code FROM TeacherUsers WHERE number = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                 pstmt.setString(1, number);
@@ -148,7 +148,7 @@ public class LogIn {
     }
 
     private boolean validateStudent(String number, String password) {
-        try (Connection conn = SQLiteConnection.connect()) {
+        try (Connection conn = SqlConnect.connect()) {
             String query = "SELECT password FROM users WHERE number = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                 pstmt.setString(1, number);
@@ -164,7 +164,7 @@ public class LogIn {
     }
 
     private String[] getStudentInfo(String number, String password) {
-        try (Connection conn = SQLiteConnection.connect()) {
+        try (Connection conn = SqlConnect.connect()) {
             String query = "SELECT number, name, class FROM users WHERE number = ? AND password = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                 pstmt.setString(1, number);
@@ -181,7 +181,7 @@ public class LogIn {
     }
 
     private String[] getTeacherInfo(String number, String password, int code) {
-        try (Connection conn = SQLiteConnection.connect()) {
+        try (Connection conn = SqlConnect.connect()) {
             String query = "SELECT name, branch FROM TeacherUsers WHERE number = ? AND password = ? AND code = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                 pstmt.setString(1, number);

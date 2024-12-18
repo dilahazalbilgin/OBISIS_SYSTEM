@@ -96,7 +96,7 @@ public class SignUp {
     }
 
     private boolean userExists(String number) {
-        try (Connection conn = SQLiteConnection.connect()) {
+        try (Connection conn = SqlConnect.connect()) {
             String query = "SELECT COUNT(*) FROM users WHERE number = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                 pstmt.setString(1, number);
@@ -111,7 +111,7 @@ public class SignUp {
     private void addUserToDatabase(String number, String name, String password, String clases) {
         String sql = "INSERT INTO users(number, name, password, class) VALUES(?, ?, ?,?)";
 
-        try (Connection conn = SQLiteConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = SqlConnect.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, number);
             pstmt.setString(2, name);
             pstmt.setString(3, password);

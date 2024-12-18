@@ -53,7 +53,7 @@ public class TeacherUser {
                             if (response == JOptionPane.YES_OPTION) {
                                 String teacherNumber = JOptionPane.showInputDialog(teacherFrame, "Please enter your teacher number:");
                                 if (teacherNumber != null && !teacherNumber.isEmpty()) {
-                                    SQLiteConnection.insertNotice(teacherNumber, noticearea.getText());
+                                    SqlConnect.insertPublicNotice(teacherNumber, noticearea.getText());
                                     JOptionPane.showMessageDialog(teacherFrame, "You published!");
                                 } else {
                                     JOptionPane.showMessageDialog(teacherFrame, "You didn't enter a valid teacher number!");
@@ -598,7 +598,13 @@ public class TeacherUser {
                         String selected = (String) combo.getSelectedItem();
                         int response = JOptionPane.showConfirmDialog(teacherFrame, "Do you want to publish this class and this notice?" + "\nClass: " + selected + "\nNotice: " + noticearea.getText(), "Alert", JOptionPane.YES_NO_OPTION);
                         if (response == JOptionPane.YES_OPTION) {
-                            JOptionPane.showMessageDialog(teacherFrame, "You published!");
+                            String teacherNumber = JOptionPane.showInputDialog(teacherFrame, "Please enter your teacher number:");
+                            if (teacherNumber != null && !teacherNumber.isEmpty()) {
+                                SqlConnect.insertPrivateNotice(teacherNumber, noticearea.getText(), selected);
+                                JOptionPane.showMessageDialog(teacherFrame, "You published!");
+                            } else {
+                                JOptionPane.showMessageDialog(teacherFrame, "You didn't enter a valid teacher number!");
+                            }
                         } else if (response == JOptionPane.NO_OPTION) {
                         }
                     } else {

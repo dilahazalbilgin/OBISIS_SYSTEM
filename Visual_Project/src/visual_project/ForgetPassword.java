@@ -84,7 +84,7 @@ public class ForgetPassword {
     }
 
     private boolean userExists(String number) {
-        try (Connection conn = SQLiteConnection.connect()) {
+        try (Connection conn = SqlConnect.connect()) {
             String query = "SELECT COUNT(*) FROM users WHERE number = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                 pstmt.setString(1, number);
@@ -99,7 +99,7 @@ public class ForgetPassword {
     private void resetPassword(String number, String newPassword) {
         String sql = "UPDATE users SET password = ? WHERE number = ?";
 
-        try (Connection conn = SQLiteConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = SqlConnect.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, newPassword);
             pstmt.setString(2, number);
             pstmt.executeUpdate();

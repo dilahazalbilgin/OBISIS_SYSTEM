@@ -12,7 +12,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import visual_project.SQLiteConnection;
+import visual_project.SqlConnect;
 
 public class StudentUser {
 
@@ -215,7 +215,7 @@ public class StudentUser {
                         String lecture = (String) model.getValueAt(rowIndex, 1);
 
                         hasSelection = true;
-                        SQLiteConnection.insertConfirmedStudentLessonForStudent(number, day, hour, lecture);
+                        SqlConnect.insertConfirmedStudentLessonForStudent(number, day, hour, lecture);
                     }
                 }
 
@@ -248,7 +248,7 @@ public class StudentUser {
             studentFrame.add(btnpanel);
             JOptionPane.showMessageDialog(studentFrame, "You can see the program after the teacher and student approve it.");
 
-            List<Object[]> confirmedStudentLessons = SQLiteConnection.getconfirmedStudentLessons();
+            List<Object[]> confirmedStudentLessons = SqlConnect.getconfirmedStudentLessons();
 
             List<Object[]> studentLessons = new ArrayList<>();
             for (Object[] lesson : confirmedStudentLessons) {

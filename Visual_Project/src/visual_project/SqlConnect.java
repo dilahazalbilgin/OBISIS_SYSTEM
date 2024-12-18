@@ -7,8 +7,9 @@ import java.sql.Statement;
 import java.sql.SQLException;
 import java.util.*;
 import java.sql.ResultSet;
+import javax.swing.JOptionPane;
 
-public class SQLiteConnection {
+public class SqlConnect {
 
     public static Connection connect() {
         try {
@@ -144,7 +145,7 @@ public class SQLiteConnection {
         }
     }
 
-    public static void insertNotice(String teacherNumber, String noticeText) {
+    public static void insertPublicNotice(String teacherNumber, String noticeText) {
         String getTeacherNameSQL = "SELECT name FROM TeacherUsers WHERE number = ?";
         String teacherName = null;
 
@@ -176,16 +177,66 @@ public class SQLiteConnection {
         }
     }
 
+    public static void createPrivateNoticeTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS PrivateNotice (\n"
+                + "    name TEXT NOT NULL,\n"
+                + "    class TEXT NOT NULL,\n"
+                + "    notice TEXT NOT NULL,\n"
+                + "    publishedDate DATETIME DEFAULT CURRENT_TIMESTAMP\n"
+                + ");";
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("PrvateNotice table created successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error creating PrvateNotice table: " + e.getMessage());
+        }
+    }
+
+    public static void insertPrivateNotice(String teacherNumber, String noticeText, String className) {
+        String getTeacherNameSQL = "SELECT name FROM TeacherUsers WHERE number = ?";
+        String teacherName = null;
+
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(getTeacherNameSQL)) {
+            pstmt.setString(1, teacherNumber);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                teacherName = rs.getString("name");
+            } else {
+                JOptionPane.showMessageDialog(null, "Teacher not found!");
+                return;
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error fetching teacher name: " + e.getMessage());
+            return;
+        }
+
+        if (teacherName != null) {
+            String sql = "INSERT INTO PrivateNotice (notice, name, class) VALUES (?, ?, ?)";
+            try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, noticeText);
+                pstmt.setString(2, teacherName);
+                pstmt.setString(3, className);
+                pstmt.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Notice successfully published!");
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error inserting notice: " + e.getMessage());
+            }
+        }
+    }
+
     public static void create() {
-        SQLiteConnection.createTable();
-        SQLiteConnection.createTeacherTable();
-        SQLiteConnection.createPublicNoticeTable();
-        SQLiteConnection.createConfirmedStudentLessonsTable();
-        SQLiteConnection.insertTeacherUser("00", "ali", "00", 0, "Math");
-        SQLiteConnection.insertTeacherUser("11", "mustafa", "11", 1, "Differantial");
-        SQLiteConnection.insertTeacherUser("22", "kemal", "22", 2, "Programing");
-        SQLiteConnection.insertTeacherUser("33", "ayşe", "33", 3, "Numeric");
-        SQLiteConnection.insertTeacherUser("44", "hafsa", "44", 4, "Linear");
+        SqlConnect.createTable();
+        SqlConnect.createTeacherTable();
+        SqlConnect.createPublicNoticeTable();
+        SqlConnect.createConfirmedStudentLessonsTable();
+        SqlConnect.createPrivateNoticeTable();
+        SqlConnect.insertTeacherUser("00", "ali", "00", 0, "Math");
+        SqlConnect.insertTeacherUser("11", "mustafa", "11", 1, "Differantial");
+        SqlConnect.insertTeacherUser("22", "kemal", "22", 2, "Programing");
+        SqlConnect.insertTeacherUser("33", "ayşe", "33", 3, "Numeric");
+        SqlConnect.insertTeacherUser("44", "hafsa", "44", 4, "Linear");
     }
 
 }
