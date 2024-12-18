@@ -177,6 +177,23 @@ public class SqlConnect {
         }
     }
 
+    public static List<String> fetchPublicNotices() {
+        List<String> notices = new ArrayList<>();
+        String sql = "SELECT name, notice FROM PublicNotice";
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                String name = rs.getString("name");
+                String notice = rs.getString("notice");
+                notices.add(String.format("Teacher %s:\n %s", name, notice));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching notices: " + e.getMessage());
+        }
+
+        return notices;
+    }
+
     public static void createPrivateNoticeTable() {
         String sql = "CREATE TABLE IF NOT EXISTS PrivateNotice (\n"
                 + "    name TEXT NOT NULL,\n"
@@ -219,11 +236,31 @@ public class SqlConnect {
                 pstmt.setString(2, teacherName);
                 pstmt.setString(3, className);
                 pstmt.executeUpdate();
-                JOptionPane.showMessageDialog(null, "Notice successfully published!");
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, "Error inserting notice: " + e.getMessage());
             }
         }
+    }
+
+    public static List<String> fetchPrivateNotices(String studentClass) {
+        List<String> notices = new ArrayList<>();
+        String sql = "SELECT name, notice, class FROM PrivateNotice WHERE class = ?";
+
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, studentClass);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                String clas = rs.getString("class");
+                String name = rs.getString("name");
+                String notice = rs.getString("notice");
+                notices.add(String.format("Class: %s \nTeacher %s: \n%s", clas, name, notice));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching notices: " + e.getMessage());
+        }
+
+        return notices;
     }
 
     public static void create() {
