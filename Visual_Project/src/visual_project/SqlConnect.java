@@ -351,7 +351,7 @@ public class SqlConnect {
         }
     }
 
-    public static List<Object[]> getMathStudentsByClass(String studentClass, String branch) {
+    public static List<Object[]> getMathAttedanceStudentsByClass(String studentClass, String branch) {
         List<Object[]> students = new ArrayList<>();
         String sql = "SELECT number, name, class, attendance FROM Math WHERE class = ?";
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -370,7 +370,419 @@ public class SqlConnect {
         }
         return students;
     }
+    
+    public static void updateMathNote(String number, String note) {
+        String sql = "UPDATE Math SET note = ? WHERE number = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, note);
+            pstmt.setString(2, number);
+            pstmt.executeUpdate();
+            System.out.println("Student updated successfully!");
+        } catch (SQLException e) {
+            System.out.println("Error updating student: " + e.getMessage());
+        }
+    }
 
+    public static List<Object[]> getMathNoteStudentsByClass(String studentClass, String branch) {
+        List<Object[]> students = new ArrayList<>();
+        String sql = "SELECT number, name, class, note FROM Math WHERE class = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, studentClass);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                students.add(new Object[]{
+                    rs.getString("number"),
+                    rs.getString("name"),
+                    branch,
+                    rs.getString("note")
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching students: " + e.getMessage());
+        }
+        return students;
+    }
+    
+    public static void createDifferantialTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS Differantial (\n"
+                + "    number TEXT PRIMARY KEY,\n"
+                + "    name TEXT NOT NULL,\n"
+                + "    class TEXT NOT NULL,\n"
+                + "    note TEXT NOT NULL,\n"
+                + "    attendance TEXT NOT NULL DEFAULT '0'\n"
+                + ");";
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Differantial table created successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error creating Differantial table: " + e.getMessage());
+        }
+    }
+    public static void insertDifferantial(String number, String name, String studentClass, String note, String attendance) {
+        String sql = "INSERT INTO Differantial (number, name, class, note, attendance) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, number);
+            pstmt.setString(2, name);
+            pstmt.setString(3, studentClass);
+            pstmt.setString(4, note);
+            pstmt.setString(5, attendance);
+            pstmt.executeUpdate();
+            System.out.println("Student added to Differantial table successfully!");
+        } catch (SQLException e) {
+            System.out.println("Error adding student to Differantial table: " + e.getMessage());
+        }
+    }
+
+    public static void updateDifferantialAttedance(String number, String attendance) {
+        String sql = "UPDATE Differantial SET attendance = ? WHERE number = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, attendance);
+            pstmt.setString(2, number);
+            pstmt.executeUpdate();
+            System.out.println("Student updated successfully!");
+        } catch (SQLException e) {
+            System.out.println("Error updating student: " + e.getMessage());
+        }
+    }
+
+    public static List<Object[]> getDifferantialAttedanceStudentsByClass(String studentClass, String branch) {
+        List<Object[]> students = new ArrayList<>();
+        String sql = "SELECT number, name, class, attendance FROM Differantial WHERE class = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, studentClass);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                students.add(new Object[]{
+                    rs.getString("number"),
+                    rs.getString("name"),
+                    branch,
+                    rs.getString("attendance")
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching students: " + e.getMessage());
+        }
+        return students;
+    }
+    
+    public static void updateDifferantialNote(String number, String note) {
+        String sql = "UPDATE Differantial SET note = ? WHERE number = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, note);
+            pstmt.setString(2, number);
+            pstmt.executeUpdate();
+            System.out.println("Student updated successfully!");
+        } catch (SQLException e) {
+            System.out.println("Error updating student: " + e.getMessage());
+        }
+    }
+
+    public static List<Object[]> getDifferantialNoteStudentsByClass(String studentClass, String branch) {
+        List<Object[]> students = new ArrayList<>();
+        String sql = "SELECT number, name, class, note FROM Differantial WHERE class = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, studentClass);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                students.add(new Object[]{
+                    rs.getString("number"),
+                    rs.getString("name"),
+                    branch,
+                    rs.getString("note")
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching students: " + e.getMessage());
+        }
+        return students;
+    }
+    
+    public static void createProgramingTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS Programing (\n"
+                + "    number TEXT PRIMARY KEY,\n"
+                + "    name TEXT NOT NULL,\n"
+                + "    class TEXT NOT NULL,\n"
+                + "    note TEXT NOT NULL,\n"
+                + "    attendance TEXT NOT NULL DEFAULT '0'\n"
+                + ");";
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Programing table created successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error creating Programing table: " + e.getMessage());
+        }
+    }
+    public static void insertPrograming(String number, String name, String studentClass, String note, String attendance) {
+        String sql = "INSERT INTO Programing (number, name, class, note, attendance) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, number);
+            pstmt.setString(2, name);
+            pstmt.setString(3, studentClass);
+            pstmt.setString(4, note);
+            pstmt.setString(5, attendance);
+            pstmt.executeUpdate();
+            System.out.println("Student added to Programing table successfully!");
+        } catch (SQLException e) {
+            System.out.println("Error adding student to Programing table: " + e.getMessage());
+        }
+    }
+
+    public static void updateProgramingAttedance(String number, String attendance) {
+        String sql = "UPDATE Programing SET attendance = ? WHERE number = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, attendance);
+            pstmt.setString(2, number);
+            pstmt.executeUpdate();
+            System.out.println("Student updated successfully!");
+        } catch (SQLException e) {
+            System.out.println("Error updating student: " + e.getMessage());
+        }
+    }
+
+    public static List<Object[]> getProgramingAttedanceStudentsByClass(String studentClass, String branch) {
+        List<Object[]> students = new ArrayList<>();
+        String sql = "SELECT number, name, class, attendance FROM Programing WHERE class = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, studentClass);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                students.add(new Object[]{
+                    rs.getString("number"),
+                    rs.getString("name"),
+                    branch,
+                    rs.getString("attendance")
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching students: " + e.getMessage());
+        }
+        return students;
+    }
+    
+    public static void updateProgramingNote(String number, String note) {
+        String sql = "UPDATE Programing SET note = ? WHERE number = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, note);
+            pstmt.setString(2, number);
+            pstmt.executeUpdate();
+            System.out.println("Student updated successfully!");
+        } catch (SQLException e) {
+            System.out.println("Error updating student: " + e.getMessage());
+        }
+    }
+
+    public static List<Object[]> getProgramingNoteStudentsByClass(String studentClass, String branch) {
+        List<Object[]> students = new ArrayList<>();
+        String sql = "SELECT number, name, class, note FROM Programing WHERE class = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, studentClass);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                students.add(new Object[]{
+                    rs.getString("number"),
+                    rs.getString("name"),
+                    branch,
+                    rs.getString("note")
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching students: " + e.getMessage());
+        }
+        return students;
+    }
+    
+    public static void createNumericTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS Numeric (\n"
+                + "    number TEXT PRIMARY KEY,\n"
+                + "    name TEXT NOT NULL,\n"
+                + "    class TEXT NOT NULL,\n"
+                + "    note TEXT NOT NULL,\n"
+                + "    attendance TEXT NOT NULL DEFAULT '0'\n"
+                + ");";
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Numeric table created successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error creating Numeric table: " + e.getMessage());
+        }
+    }
+    public static void insertNumeric(String number, String name, String studentClass, String note, String attendance) {
+        String sql = "INSERT INTO Numeric (number, name, class, note, attendance) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, number);
+            pstmt.setString(2, name);
+            pstmt.setString(3, studentClass);
+            pstmt.setString(4, note);
+            pstmt.setString(5, attendance);
+            pstmt.executeUpdate();
+            System.out.println("Student added to Numeric table successfully!");
+        } catch (SQLException e) {
+            System.out.println("Error adding student to Numeric table: " + e.getMessage());
+        }
+    }
+
+    public static void updateNumericAttedance(String number, String attendance) {
+        String sql = "UPDATE Numeric SET attendance = ? WHERE number = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, attendance);
+            pstmt.setString(2, number);
+            pstmt.executeUpdate();
+            System.out.println("Student updated successfully!");
+        } catch (SQLException e) {
+            System.out.println("Error updating student: " + e.getMessage());
+        }
+    }
+
+    public static List<Object[]> getNumericAttedanceStudentsByClass(String studentClass, String branch) {
+        List<Object[]> students = new ArrayList<>();
+        String sql = "SELECT number, name, class, attendance FROM Numeric WHERE class = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, studentClass);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                students.add(new Object[]{
+                    rs.getString("number"),
+                    rs.getString("name"),
+                    branch,
+                    rs.getString("attendance")
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching students: " + e.getMessage());
+        }
+        return students;
+    }
+    
+    public static void updateNumericNote(String number, String note) {
+        String sql = "UPDATE Numeric SET note = ? WHERE number = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, note);
+            pstmt.setString(2, number);
+            pstmt.executeUpdate();
+            System.out.println("Student updated successfully!");
+        } catch (SQLException e) {
+            System.out.println("Error updating student: " + e.getMessage());
+        }
+    }
+
+    public static List<Object[]> getNumericNoteStudentsByClass(String studentClass, String branch) {
+        List<Object[]> students = new ArrayList<>();
+        String sql = "SELECT number, name, class, note FROM Numeric WHERE class = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, studentClass);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                students.add(new Object[]{
+                    rs.getString("number"),
+                    rs.getString("name"),
+                    branch,
+                    rs.getString("note")
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching students: " + e.getMessage());
+        }
+        return students;
+    }
+
+    public static void createLinearTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS Linear (\n"
+                + "    number TEXT PRIMARY KEY,\n"
+                + "    name TEXT NOT NULL,\n"
+                + "    class TEXT NOT NULL,\n"
+                + "    note TEXT NOT NULL,\n"
+                + "    attendance TEXT NOT NULL DEFAULT '0'\n"
+                + ");";
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Numeric table created successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error creating Numeric table: " + e.getMessage());
+        }
+    }
+    public static void insertLinear(String number, String name, String studentClass, String note, String attendance) {
+        String sql = "INSERT INTO Linear (number, name, class, note, attendance) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, number);
+            pstmt.setString(2, name);
+            pstmt.setString(3, studentClass);
+            pstmt.setString(4, note);
+            pstmt.setString(5, attendance);
+            pstmt.executeUpdate();
+            System.out.println("Student added to Linear table successfully!");
+        } catch (SQLException e) {
+            System.out.println("Error adding student to Linear table: " + e.getMessage());
+        }
+    }
+
+    public static void updateLinearAttedance(String number, String attendance) {
+        String sql = "UPDATE Linear SET attendance = ? WHERE number = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, attendance);
+            pstmt.setString(2, number);
+            pstmt.executeUpdate();
+            System.out.println("Student updated successfully!");
+        } catch (SQLException e) {
+            System.out.println("Error updating student: " + e.getMessage());
+        }
+    }
+
+    public static List<Object[]> getLinearAttedanceStudentsByClass(String studentClass, String branch) {
+        List<Object[]> students = new ArrayList<>();
+        String sql = "SELECT number, name, class, attendance FROM Linear WHERE class = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, studentClass);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                students.add(new Object[]{
+                    rs.getString("number"),
+                    rs.getString("name"),
+                    branch,
+                    rs.getString("attendance")
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching students: " + e.getMessage());
+        }
+        return students;
+    }
+    
+    public static void updateLinearNote(String number, String note) {
+        String sql = "UPDATE Linear SET note = ? WHERE number = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, note);
+            pstmt.setString(2, number);
+            pstmt.executeUpdate();
+            System.out.println("Student updated successfully!");
+        } catch (SQLException e) {
+            System.out.println("Error updating student: " + e.getMessage());
+        }
+    }
+
+    public static List<Object[]> getLinearNoteStudentsByClass(String studentClass, String branch) {
+        List<Object[]> students = new ArrayList<>();
+        String sql = "SELECT number, name, class, note FROM Linear WHERE class = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, studentClass);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                students.add(new Object[]{
+                    rs.getString("number"),
+                    rs.getString("name"),
+                    branch,
+                    rs.getString("note")
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching students: " + e.getMessage());
+        }
+        return students;
+    }
+    
     public static void create() {
         SqlConnect.createTable();
         SqlConnect.createTeacherTable();
@@ -378,27 +790,11 @@ public class SqlConnect {
         SqlConnect.createConfirmedStudentLessonsTable();
         SqlConnect.createPrivateNoticeTable();
         SqlConnect.createMathTable();
-        SqlConnect.insertMath("01", "Ali", "P", "0", "0");
-        SqlConnect.insertMath("02", "Veli", "P", "0", "0");
-        SqlConnect.insertMath("03", "Ayşe", "P", "0", "0");
-        SqlConnect.insertMath("04", "Tuğçe", "1", "0", "0");
-        SqlConnect.insertMath("05", "Büşra", "1", "0", "0");
-        SqlConnect.insertMath("06", "Zeliha", "1", "0", "0");
-        SqlConnect.insertMath("07", "Mustafa", "1", "0", "0");
-        SqlConnect.insertMath("08", "Dila", "1", "0", "0");
-        SqlConnect.insertMath("09", "Hazal", "2", "0", "0");
-        SqlConnect.insertMath("10", "Ece", "2", "0", "0");
-        SqlConnect.insertMath("11", "Sena", "2", "0", "0");
-        SqlConnect.insertMath("12", "Zehra", "3", "0", "0");
-        SqlConnect.insertMath("13", "Ceren", "3", "0", "0");
-        SqlConnect.insertMath("14", "Nisa", "3", "0", "0");
-        SqlConnect.insertMath("15", "Sevde", "3", "0", "0");
-        SqlConnect.insertMath("16", "Dila", "3", "0", "0");
-        SqlConnect.insertMath("17", "Burak", "3", "0", "0");
-        SqlConnect.insertMath("18", "Berke", "4", "0", "0");
-        SqlConnect.insertMath("19", "Mehmet", "4", "0", "0");
-        SqlConnect.insertMath("20", "Murat", "4", "0", "0");
-        SqlConnect.insertMath("21", "Recep", "4", "0", "0");
+        SqlConnect.createDifferantialTable();
+        SqlConnect.createProgramingTable();
+        SqlConnect.createNumericTable();
+        SqlConnect.createLinearTable();
+        StudentList.lecture();
         SqlConnect.insertTeacherUser("00", "ali", "00", 0, "Math");
         SqlConnect.insertTeacherUser("11", "mustafa", "11", 1, "Differantial");
         SqlConnect.insertTeacherUser("22", "kemal", "22", 2, "Programing");
