@@ -55,6 +55,7 @@ public class LogIn {
             public void actionPerformed(ActionEvent e) {
                 String number = numbertext.getText();
                 String password = new String(passwordtext.getPassword());
+                String teacherName = "";
 
                 if (number.isEmpty() || password.isEmpty()) {
                     JOptionPane.showMessageDialog(logFrame, "Empty number or password");
@@ -67,7 +68,7 @@ public class LogIn {
                             String branch = teacherInfo[1];
 
                             logFrame.getContentPane().removeAll();
-                            new TeacherUser(logFrame, branch, name); // name artık burada tanımlı
+                            new TeacherUser(logFrame, branch, name);
                             logFrame.revalidate();
                             logFrame.repaint();
                         } else {

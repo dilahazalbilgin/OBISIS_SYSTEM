@@ -4,6 +4,7 @@ import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.*;
@@ -86,57 +87,18 @@ public class TeacherUser {
             classeslbl.setBounds(350, 30, 150, 30);
             teacherFrame.add(classeslbl);
 
-            DefaultTableModel model = new DefaultTableModel(new String[]{"Number", "Name", "Surname", "Lecture", "Attendance"}, 0);
+            DefaultTableModel model = new DefaultTableModel(new String[]{"Number", "Name", "Lecture", "Attendance"}, 0);
             JTable attedanceTable = new JTable(model);
             JScrollPane attedanceScroll = new JScrollPane(attedanceTable);
             attedanceScroll.setBounds(180, 80, 370, 380);
             teacherFrame.add(attedanceScroll);
 
-            Map<String, Object[][]> classData = new HashMap<>();
-            combo.setSelectedIndex(0);
-            classData.put("P", new Object[][]{
-                {"10", "Ali", "Kara", branch, "0"},
-                {"5", "Ahmet", "Kılıç", branch, "0"},
-                {"20", "Ayşe", "Koç", branch, "0"},
-                {"15", "Mehmet", "Yılmaz", branch, "0"},
-                {"8", "Fatma", "Çelik", branch, "0"}
-            });
-            classData.put("1", new Object[][]{
-                {"15", "Mehmet", "Yılmaz", branch, "0"},
-                {"8", "Fatma", "Çelik", branch, "0"},
-                {"50", "Ali", "Kara", branch, "0"},
-                {"51", "Ahmet", "Kılıç", branch, "0"},
-                {"52", "Ayşe", "Koç", branch, "0"}
-            });
-            classData.put("2", new Object[][]{
-                {"22", "Zeynep", "Demir", branch, "0"},
-                {"50", "Ali", "Kara", branch, "0"},
-                {"51", "Ahmet", "Kılıç", branch, "0"},
-                {"52", "Ayşe", "Koç", branch, "0"}
-            });
-            classData.put("3", new Object[][]{
-                {"50", "Ali", "Kara", branch, "0"},
-                {"51", "Ahmet", "Kılıç", branch, "0"},
-                {"52", "Ayşe", "Koç", branch, "0"},
-                {"78", "Ali", "Kara", branch, "0"},
-                {"67", "Ahmet", "Kılıç", branch, "0"}
-            });
-            classData.put("4", new Object[][]{
-                {"78", "Ali", "Kara", branch, "0"},
-                {"67", "Ahmet", "Kılıç", branch, "0"},
-                {"22", "Zeynep", "Demir", branch, "0"},
-                {"50", "Ali", "Kara", branch, "0"},
-                {"51", "Ahmet", "Kılıç", branch, "0"},
-                {"52", "Ayşe", "Koç", branch, "0"}
-            });
-
             combo.addActionListener(event -> {
                 String selectedClass = (String) combo.getSelectedItem();
                 model.setRowCount(0);
-                if (classData.containsKey(selectedClass)) {
-                    for (Object[] row : classData.get(selectedClass)) {
-                        model.addRow(row);
-                    }
+                List<Object[]> students = SqlConnect.getMathStudentsByClass(selectedClass, branch);  // Fetch students by class
+                for (Object[] row : students) {
+                    model.addRow(row);
                 }
             });
 
@@ -174,8 +136,9 @@ public class TeacherUser {
                     String selectedAttendance = null;
                     boolean found = false;
 
+                    // Input validation
                     if (searchNumber.isEmpty() || group.getSelection() == null) {
-                        JOptionPane.showMessageDialog(teacherFrame, "Please fill in both the search number and note fields.");
+                        JOptionPane.showMessageDialog(teacherFrame, "Please fill in both the search number and attendance fields.");
                         return;
                     } else {
                         if (group.getSelection().equals(check1.getModel())) {
@@ -184,31 +147,45 @@ public class TeacherUser {
                             selectedAttendance = "NotContinous";
                         }
                     }
-
                     for (int i = 0; i < model.getRowCount(); i++) {
                         String tableNumber = model.getValueAt(i, 0).toString();
                         if (tableNumber.equals(searchNumber)) {
                             found = true;
                             attedanceTable.setRowSelectionInterval(i, i);
-                            String existingAttedance = model.getValueAt(i, 4).toString();
-                            if (!existingAttedance.equals("0")) {
-                                JOptionPane.showMessageDialog(teacherFrame,
-                                        "The attedance is already assigned. Please use the Update button to change it.\n");
+
+                            String existingAttendance = model.getValueAt(i, 3).toString();
+                            if (!existingAttendance.equals("0")) {
+                                JOptionPane.showMessageDialog(teacherFrame, "Attendance is already assigned. Use the Update button to modify.");
                             } else {
-                                model.setValueAt(selectedAttendance, i, 4);
+                                model.setValueAt(selectedAttendance, i, 3);
+                                SqlConnect.updateMathAttedance(searchNumber, selectedAttendance);
+
+                                model.setRowCount(0);
+                                List<Object[]> updatedStudents = SqlConnect.getMathStudentsByClass((String) combo.getSelectedItem(), branch);
+
+                                for (Object[] row : updatedStudents) {
+                                    if (row.length >= 4) {
+                                        model.addRow(row);
+                                    } else {
+                                        System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
+                                    }
+                                }
+
                                 JOptionPane.showMessageDialog(teacherFrame,
-                                        "Attedance added successfully for:\nNumber: " + tableNumber
-                                        + "\nName: " + model.getValueAt(i, 1)
-                                        + "\nSurname: " + model.getValueAt(i, 2));
+                                        "Attendance added successfully for:\nNumber: " + searchNumber
+                                        + "\nName: " + model.getValueAt(i, 2)
+                                        + "\nLecture: " + branch);
                             }
                             break;
                         }
                     }
+
                     if (!found) {
                         JOptionPane.showMessageDialog(teacherFrame, "No match found for number: " + searchNumber);
                     }
                 }
             });
+
             JButton updatebtn = new JButton("Update");
             updatebtn.setBounds(400, 520, 110, 30);
             teacherFrame.add(updatebtn);
@@ -234,11 +211,12 @@ public class TeacherUser {
                             if (tableNumber.equals(searchNumber)) {
                                 found = true;
                                 attedanceTable.setRowSelectionInterval(i, i);
-                                model.setValueAt(selectedAttendance, i, 4);
+                                model.setValueAt(selectedAttendance, i, 3);
+                                model.setValueAt(branch, i, 2);
                                 JOptionPane.showMessageDialog(teacherFrame,
                                         "Attedance added successfully for:\nNumber: " + tableNumber
                                         + "\nName: " + model.getValueAt(i, 1)
-                                        + "\nSurname: " + model.getValueAt(i, 2));
+                                        + "\nLecture: " + branch);
 
                                 break;
                             }
@@ -506,20 +484,20 @@ public class TeacherUser {
 
             List<String> selectedLessons = new ArrayList<>();
 
-            JButton approvebtn = new JButton("Aprove");
+            JButton approvebtn = new JButton("Approve");
             approvebtn.setBounds(450, 520, 100, 30);
             approvebtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    String teacherNumber = "";
+                    String teacherName = "";
+
                     if (model.getSize() >= 3) {
                         StringBuilder listContent = new StringBuilder();
-                        for (int i = 0; i < model.getSize(); i++) {
-                            listContent.append(model.getElementAt(i)).append("\n");
-                        }
-
                         selectedLessons.clear();
                         for (int i = 0; i < model.getSize(); i++) {
                             selectedLessons.add(model.getElementAt(i).toString());
+                            listContent.append(model.getElementAt(i)).append("\n");
                         }
 
                         int response = JOptionPane.showConfirmDialog(
@@ -530,7 +508,12 @@ public class TeacherUser {
                         );
 
                         if (response == JOptionPane.YES_OPTION) {
-                            JOptionPane.showMessageDialog(teacherFrame, "Program approved!");
+                            if (!teacherNumber.isEmpty() && !teacherName.isEmpty()) {
+                                SqlConnect.insertCourse(teacherNumber, teacherName, selectedLessons);
+                                JOptionPane.showMessageDialog(teacherFrame, "Program approved and saved!");
+                            } else {
+                                JOptionPane.showMessageDialog(teacherFrame, "Teacher information is missing.");
+                            }
                         }
                     } else {
                         JOptionPane.showMessageDialog(teacherFrame, "You must select at least 3 items before approving.");

@@ -79,7 +79,7 @@ public class SqlConnect {
 
     public static void createConfirmedStudentLessonsTable() {
         String sql = "CREATE TABLE IF NOT EXISTS ConfirmedLessons (\n"
-                + "    number TEXT NOT NULL,\n"
+                + "    number TEXT PRIMARY KEY,\n"
                 + "    day TEXT NOT NULL,\n"
                 + "    hour TEXT NOT NULL,\n"
                 + "    lecture TEXT NOT NULL\n"
@@ -263,12 +263,142 @@ public class SqlConnect {
         return notices;
     }
 
+    public static void createTeacherCourseTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS TeacherCourse (\n"
+                + "    teacherNumber TEXT NOT NULL,\n"
+                + "    teacherName TEXT NOT NULL,\n"
+                + "    selectedSchedule TEXT NOT NULL\n"
+                + ");";
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("PrvateNotice table created successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error creating PrvateNotice table: " + e.getMessage());
+        }
+    }
+
+    public static void insertCourse(String teacherNumber, String teacherName, List<String> scheduleList) {
+        String sql = "INSERT INTO Courses (teacherNumber, teacherName, selectedSchedule) VALUES (?, ?, ?)";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, teacherNumber);
+            pstmt.setString(2, teacherName);
+            pstmt.setString(3, String.join(", ", scheduleList));
+            pstmt.executeUpdate();
+            System.out.println("Course successfully saved!");
+        } catch (SQLException e) {
+            System.out.println("Error saving course: " + e.getMessage());
+        }
+    }
+
+    public static List<String[]> fetchCourses() {
+        List<String[]> courses = new ArrayList<>();
+        String sql = "SELECT teacherNumber, teacherName, selectedSchedule FROM Courses";
+        try (Connection conn = connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                String teacherNumber = rs.getString("teacherNumber");
+                String teacherName = rs.getString("teacherName");
+                String schedule = rs.getString("selectedSchedule");
+                courses.add(new String[]{teacherNumber, teacherName, schedule});
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching courses: " + e.getMessage());
+        }
+        return courses;
+    }
+
+    public static void createMathTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS Math (\n"
+                + "    number TEXT PRIMARY KEY,\n"
+                + "    name TEXT NOT NULL,\n"
+                + "    class TEXT NOT NULL,\n"
+                + "    note TEXT NOT NULL,\n"
+                + "    attendance TEXT NOT NULL DEFAULT '0'\n"
+                + ");";
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Math table created successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error creating Math table: " + e.getMessage());
+        }
+    }
+
+    public static void insertMath(String number, String name, String studentClass, String note, String attendance) {
+        String sql = "INSERT INTO Math (number, name, class, note, attendance) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, number);
+            pstmt.setString(2, name);
+            pstmt.setString(3, studentClass);
+            pstmt.setString(4, note);
+            pstmt.setString(5, attendance);
+            pstmt.executeUpdate();
+            System.out.println("Student added to Math table successfully!");
+        } catch (SQLException e) {
+            System.out.println("Error adding student to Math table: " + e.getMessage());
+        }
+    }
+
+    public static void updateMathAttedance(String number, String attendance) {
+        String sql = "UPDATE Math SET attendance = ? WHERE number = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, attendance);
+            pstmt.setString(2, number);
+            pstmt.executeUpdate();
+            System.out.println("Student updated successfully!");
+        } catch (SQLException e) {
+            System.out.println("Error updating student: " + e.getMessage());
+        }
+    }
+
+    public static List<Object[]> getMathStudentsByClass(String studentClass, String branch) {
+        List<Object[]> students = new ArrayList<>();
+        String sql = "SELECT number, name, class, attendance FROM Math WHERE class = ?";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, studentClass);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                students.add(new Object[]{
+                    rs.getString("number"),
+                    rs.getString("name"),
+                    branch,
+                    rs.getString("attendance")
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching students: " + e.getMessage());
+        }
+        return students;
+    }
+
     public static void create() {
         SqlConnect.createTable();
         SqlConnect.createTeacherTable();
         SqlConnect.createPublicNoticeTable();
         SqlConnect.createConfirmedStudentLessonsTable();
         SqlConnect.createPrivateNoticeTable();
+        SqlConnect.createMathTable();
+        SqlConnect.insertMath("01", "Ali", "P", "0", "0");
+        SqlConnect.insertMath("02", "Veli", "P", "0", "0");
+        SqlConnect.insertMath("03", "Ayşe", "P", "0", "0");
+        SqlConnect.insertMath("04", "Tuğçe", "1", "0", "0");
+        SqlConnect.insertMath("05", "Büşra", "1", "0", "0");
+        SqlConnect.insertMath("06", "Zeliha", "1", "0", "0");
+        SqlConnect.insertMath("07", "Mustafa", "1", "0", "0");
+        SqlConnect.insertMath("08", "Dila", "1", "0", "0");
+        SqlConnect.insertMath("09", "Hazal", "2", "0", "0");
+        SqlConnect.insertMath("10", "Ece", "2", "0", "0");
+        SqlConnect.insertMath("11", "Sena", "2", "0", "0");
+        SqlConnect.insertMath("12", "Zehra", "3", "0", "0");
+        SqlConnect.insertMath("13", "Ceren", "3", "0", "0");
+        SqlConnect.insertMath("14", "Nisa", "3", "0", "0");
+        SqlConnect.insertMath("15", "Sevde", "3", "0", "0");
+        SqlConnect.insertMath("16", "Dila", "3", "0", "0");
+        SqlConnect.insertMath("17", "Burak", "3", "0", "0");
+        SqlConnect.insertMath("18", "Berke", "4", "0", "0");
+        SqlConnect.insertMath("19", "Mehmet", "4", "0", "0");
+        SqlConnect.insertMath("20", "Murat", "4", "0", "0");
+        SqlConnect.insertMath("21", "Recep", "4", "0", "0");
         SqlConnect.insertTeacherUser("00", "ali", "00", 0, "Math");
         SqlConnect.insertTeacherUser("11", "mustafa", "11", 1, "Differantial");
         SqlConnect.insertTeacherUser("22", "kemal", "22", 2, "Programing");
