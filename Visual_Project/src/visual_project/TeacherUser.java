@@ -383,13 +383,13 @@ public class TeacherUser {
             classeslbl.setBounds(350, 30, 150, 30);
             teacherFrame.add(classeslbl);
 
-            DefaultTableModel model = new DefaultTableModel(new String[]{"Number", "Name","Lecture", "Note"}, 0);
+            DefaultTableModel model = new DefaultTableModel(new String[]{"Number", "Name", "Lecture", "Note"}, 0);
             JTable noteTable = new JTable(model);
             JScrollPane noteScroll = new JScrollPane(noteTable);
             noteScroll.setBounds(180, 80, 370, 380);
             teacherFrame.add(noteScroll);
 
-             if (branch.equals("Math")) {
+            if (branch.equals("Math")) {
                 combo.addActionListener(event -> {
                     String selectedClass = (String) combo.getSelectedItem();
                     model.setRowCount(0);
@@ -480,7 +480,7 @@ public class TeacherUser {
                             } else {
                                 model.setValueAt(newNote, i, 3);
                                 if (branch.equals("Math")) {
-                                    SqlConnect.updateMathNote(searchNumber,newNote );
+                                    SqlConnect.updateMathNote(searchNumber, newNote);
                                     model.setRowCount(0);
                                     List<Object[]> updatedStudents = SqlConnect.getMathNoteStudentsByClass((String) combo.getSelectedItem(), branch);
                                     for (Object[] row : updatedStudents) {
@@ -572,61 +572,61 @@ public class TeacherUser {
                             noteTable.setRowSelectionInterval(i, i);
                             model.setValueAt(newNote, i, 3);
                             if (branch.equals("Math")) {
-                                    SqlConnect.updateMathNote(searchNumber,newNote );
-                                    model.setRowCount(0);
-                                    List<Object[]> updatedStudents = SqlConnect.getMathNoteStudentsByClass((String) combo.getSelectedItem(), branch);
-                                    for (Object[] row : updatedStudents) {
-                                        if (row.length >= 4) {
-                                            model.addRow(row);
-                                        } else {
-                                            System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
-                                        }
-                                    }
-                                } else if (branch.equals("Differantial")) {
-                                    SqlConnect.updateDifferantialNote(searchNumber, newNote);
-                                    model.setRowCount(0);
-                                    List<Object[]> updatedStudents = SqlConnect.getDifferantialNoteStudentsByClass((String) combo.getSelectedItem(), branch);
-                                    for (Object[] row : updatedStudents) {
-                                        if (row.length >= 4) {
-                                            model.addRow(row);
-                                        } else {
-                                            System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
-                                        }
-                                    }
-                                } else if (branch.equals("Programing")) {
-                                    SqlConnect.updateProgramingNote(searchNumber, newNote);
-                                    model.setRowCount(0);
-                                    List<Object[]> updatedStudents = SqlConnect.getProgramingNoteStudentsByClass((String) combo.getSelectedItem(), branch);
-                                    for (Object[] row : updatedStudents) {
-                                        if (row.length >= 4) {
-                                            model.addRow(row);
-                                        } else {
-                                            System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
-                                        }
-                                    }
-                                } else if (branch.equals("Numeric")) {
-                                    SqlConnect.updateNumericNote(searchNumber, newNote);
-                                    model.setRowCount(0);
-                                    List<Object[]> updatedStudents = SqlConnect.getNumericNoteStudentsByClass((String) combo.getSelectedItem(), branch);
-                                    for (Object[] row : updatedStudents) {
-                                        if (row.length >= 4) {
-                                            model.addRow(row);
-                                        } else {
-                                            System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
-                                        }
-                                    }
-                                } else if (branch.equals("Linear")) {
-                                    SqlConnect.updateLinearNote(searchNumber, newNote);
-                                    model.setRowCount(0);
-                                    List<Object[]> updatedStudents = SqlConnect.getLinearNoteStudentsByClass((String) combo.getSelectedItem(), branch);
-                                    for (Object[] row : updatedStudents) {
-                                        if (row.length >= 4) {
-                                            model.addRow(row);
-                                        } else {
-                                            System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
-                                        }
+                                SqlConnect.updateMathNote(searchNumber, newNote);
+                                model.setRowCount(0);
+                                List<Object[]> updatedStudents = SqlConnect.getMathNoteStudentsByClass((String) combo.getSelectedItem(), branch);
+                                for (Object[] row : updatedStudents) {
+                                    if (row.length >= 4) {
+                                        model.addRow(row);
+                                    } else {
+                                        System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
                                     }
                                 }
+                            } else if (branch.equals("Differantial")) {
+                                SqlConnect.updateDifferantialNote(searchNumber, newNote);
+                                model.setRowCount(0);
+                                List<Object[]> updatedStudents = SqlConnect.getDifferantialNoteStudentsByClass((String) combo.getSelectedItem(), branch);
+                                for (Object[] row : updatedStudents) {
+                                    if (row.length >= 4) {
+                                        model.addRow(row);
+                                    } else {
+                                        System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
+                                    }
+                                }
+                            } else if (branch.equals("Programing")) {
+                                SqlConnect.updateProgramingNote(searchNumber, newNote);
+                                model.setRowCount(0);
+                                List<Object[]> updatedStudents = SqlConnect.getProgramingNoteStudentsByClass((String) combo.getSelectedItem(), branch);
+                                for (Object[] row : updatedStudents) {
+                                    if (row.length >= 4) {
+                                        model.addRow(row);
+                                    } else {
+                                        System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
+                                    }
+                                }
+                            } else if (branch.equals("Numeric")) {
+                                SqlConnect.updateNumericNote(searchNumber, newNote);
+                                model.setRowCount(0);
+                                List<Object[]> updatedStudents = SqlConnect.getNumericNoteStudentsByClass((String) combo.getSelectedItem(), branch);
+                                for (Object[] row : updatedStudents) {
+                                    if (row.length >= 4) {
+                                        model.addRow(row);
+                                    } else {
+                                        System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
+                                    }
+                                }
+                            } else if (branch.equals("Linear")) {
+                                SqlConnect.updateLinearNote(searchNumber, newNote);
+                                model.setRowCount(0);
+                                List<Object[]> updatedStudents = SqlConnect.getLinearNoteStudentsByClass((String) combo.getSelectedItem(), branch);
+                                for (Object[] row : updatedStudents) {
+                                    if (row.length >= 4) {
+                                        model.addRow(row);
+                                    } else {
+                                        System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
+                                    }
+                                }
+                            }
                             JOptionPane.showMessageDialog(teacherFrame,
                                     "Note updated successfully for:\nNumber: " + tableNumber
                                     + "\nName: " + model.getValueAt(i, 1)
@@ -662,61 +662,61 @@ public class TeacherUser {
                             noteTable.setRowSelectionInterval(i, i);
                             model.setValueAt("0", i, 3);
                             if (branch.equals("Math")) {
-                                    SqlConnect.updateMathNote(searchNumber,"0" );
-                                    model.setRowCount(0);
-                                    List<Object[]> updatedStudents = SqlConnect.getMathNoteStudentsByClass((String) combo.getSelectedItem(), branch);
-                                    for (Object[] row : updatedStudents) {
-                                        if (row.length >= 4) {
-                                            model.addRow(row);
-                                        } else {
-                                            System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
-                                        }
-                                    }
-                                } else if (branch.equals("Differantial")) {
-                                    SqlConnect.updateDifferantialNote(searchNumber, "0");
-                                    model.setRowCount(0);
-                                    List<Object[]> updatedStudents = SqlConnect.getDifferantialNoteStudentsByClass((String) combo.getSelectedItem(), branch);
-                                    for (Object[] row : updatedStudents) {
-                                        if (row.length >= 4) {
-                                            model.addRow(row);
-                                        } else {
-                                            System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
-                                        }
-                                    }
-                                } else if (branch.equals("Programing")) {
-                                    SqlConnect.updateProgramingNote(searchNumber, "0");
-                                    model.setRowCount(0);
-                                    List<Object[]> updatedStudents = SqlConnect.getProgramingNoteStudentsByClass((String) combo.getSelectedItem(), branch);
-                                    for (Object[] row : updatedStudents) {
-                                        if (row.length >= 4) {
-                                            model.addRow(row);
-                                        } else {
-                                            System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
-                                        }
-                                    }
-                                } else if (branch.equals("Numeric")) {
-                                    SqlConnect.updateNumericNote(searchNumber, "0");
-                                    model.setRowCount(0);
-                                    List<Object[]> updatedStudents = SqlConnect.getNumericNoteStudentsByClass((String) combo.getSelectedItem(), branch);
-                                    for (Object[] row : updatedStudents) {
-                                        if (row.length >= 4) {
-                                            model.addRow(row);
-                                        } else {
-                                            System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
-                                        }
-                                    }
-                                } else if (branch.equals("Linear")) {
-                                    SqlConnect.updateLinearNote(searchNumber, "0");
-                                    model.setRowCount(0);
-                                    List<Object[]> updatedStudents = SqlConnect.getLinearNoteStudentsByClass((String) combo.getSelectedItem(), branch);
-                                    for (Object[] row : updatedStudents) {
-                                        if (row.length >= 4) {
-                                            model.addRow(row);
-                                        } else {
-                                            System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
-                                        }
+                                SqlConnect.updateMathNote(searchNumber, "0");
+                                model.setRowCount(0);
+                                List<Object[]> updatedStudents = SqlConnect.getMathNoteStudentsByClass((String) combo.getSelectedItem(), branch);
+                                for (Object[] row : updatedStudents) {
+                                    if (row.length >= 4) {
+                                        model.addRow(row);
+                                    } else {
+                                        System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
                                     }
                                 }
+                            } else if (branch.equals("Differantial")) {
+                                SqlConnect.updateDifferantialNote(searchNumber, "0");
+                                model.setRowCount(0);
+                                List<Object[]> updatedStudents = SqlConnect.getDifferantialNoteStudentsByClass((String) combo.getSelectedItem(), branch);
+                                for (Object[] row : updatedStudents) {
+                                    if (row.length >= 4) {
+                                        model.addRow(row);
+                                    } else {
+                                        System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
+                                    }
+                                }
+                            } else if (branch.equals("Programing")) {
+                                SqlConnect.updateProgramingNote(searchNumber, "0");
+                                model.setRowCount(0);
+                                List<Object[]> updatedStudents = SqlConnect.getProgramingNoteStudentsByClass((String) combo.getSelectedItem(), branch);
+                                for (Object[] row : updatedStudents) {
+                                    if (row.length >= 4) {
+                                        model.addRow(row);
+                                    } else {
+                                        System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
+                                    }
+                                }
+                            } else if (branch.equals("Numeric")) {
+                                SqlConnect.updateNumericNote(searchNumber, "0");
+                                model.setRowCount(0);
+                                List<Object[]> updatedStudents = SqlConnect.getNumericNoteStudentsByClass((String) combo.getSelectedItem(), branch);
+                                for (Object[] row : updatedStudents) {
+                                    if (row.length >= 4) {
+                                        model.addRow(row);
+                                    } else {
+                                        System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
+                                    }
+                                }
+                            } else if (branch.equals("Linear")) {
+                                SqlConnect.updateLinearNote(searchNumber, "0");
+                                model.setRowCount(0);
+                                List<Object[]> updatedStudents = SqlConnect.getLinearNoteStudentsByClass((String) combo.getSelectedItem(), branch);
+                                for (Object[] row : updatedStudents) {
+                                    if (row.length >= 4) {
+                                        model.addRow(row);
+                                    } else {
+                                        System.out.println("Skipping row with invalid data: " + Arrays.toString(row));
+                                    }
+                                }
+                            }
 
                             JOptionPane.showMessageDialog(teacherFrame,
                                     "Note reset to 0 successfully for:\nNumber: " + tableNumber
@@ -795,15 +795,22 @@ public class TeacherUser {
             approvebtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String teacherNumber = "";
-                    String teacherName = "";
+                    String teacherNumber = "a";
+                    String teacherName = "b";
 
                     if (model.getSize() >= 3) {
                         StringBuilder listContent = new StringBuilder();
                         selectedLessons.clear();
                         for (int i = 0; i < model.getSize(); i++) {
-                            selectedLessons.add(model.getElementAt(i).toString());
-                            listContent.append(model.getElementAt(i)).append("\n");
+                            String[] lessonInfo = model.getElementAt(i).toString().split(" ");
+                            String day = lessonInfo[1];
+                            String hour = lessonInfo[3];
+                            String courseName = "Course";  // Ders adı
+                            selectedLessons.add(day + " " + hour);
+
+                            // Veritabanına ekle
+                            SqlConnect.insertTeacherCourse(teacherNumber, teacherName, day, hour, courseName);
+                            listContent.append("Day: ").append(day).append(" Hour: ").append(hour).append("\n");
                         }
 
                         int response = JOptionPane.showConfirmDialog(
@@ -814,12 +821,7 @@ public class TeacherUser {
                         );
 
                         if (response == JOptionPane.YES_OPTION) {
-                            if (!teacherNumber.isEmpty() && !teacherName.isEmpty()) {
-                                SqlConnect.insertCourse(teacherNumber, teacherName, selectedLessons);
-                                JOptionPane.showMessageDialog(teacherFrame, "Program approved and saved!");
-                            } else {
-                                JOptionPane.showMessageDialog(teacherFrame, "Teacher information is missing.");
-                            }
+                            JOptionPane.showMessageDialog(teacherFrame, "Program approved and saved!");
                         }
                     } else {
                         JOptionPane.showMessageDialog(teacherFrame, "You must select at least 3 items before approving.");
@@ -849,9 +851,10 @@ public class TeacherUser {
             JScrollPane noteScroll = new JScrollPane(noteTable);
             noteScroll.setBounds(180, 80, 370, 380);
             teacherFrame.add(noteScroll);
-            model.addRow(new Object[]{"Monday", "12.00-14.00", branch});
-            model.addRow(new Object[]{"Wednesday", "13.00-15.00", branch});
-            model.addRow(new Object[]{"Friday", "09.00-11.00", branch});
+            List<String[]> courses = SqlConnect.getTeacherCourses();
+            for (String[] course : courses) {
+                model.addRow(course);
+            }
             teacherFrame.revalidate();
             teacherFrame.repaint();
 
@@ -918,4 +921,5 @@ public class TeacherUser {
 
         teacherFrame.setVisible(true);
     }
+
 }

@@ -264,31 +264,54 @@ public class SqlConnect {
     }
 
     public static void createTeacherCourseTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS TeacherCourse (\n"
-                + "    teacherNumber TEXT NOT NULL,\n"
-                + "    teacherName TEXT NOT NULL,\n"
-                + "    selectedSchedule TEXT NOT NULL\n"
+        String sql = " CREATE TABLE IF NOT EXISTS TeacherCourse (\n"
+                + "    id INT AUTO_INCREMENT PRIMARY KEY,\n"
+                + "    teacherNumber VARCHAR(50),\n"
+                + "    teacherName VARCHAR(100),\n"
+                + "    day VARCHAR(50),\n"
+                + "    hour VARCHAR(50),\n"
+                + "    courseName VARCHAR(100)\n"
                 + ");";
 
         try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("PrvateNotice table created successfully.");
+            System.out.println("TeacherCourse table created successfully.");
         } catch (SQLException e) {
-            System.out.println("Error creating PrvateNotice table: " + e.getMessage());
+            System.out.println("Error creating TeacherCourse table: " + e.getMessage());
         }
     }
 
-    public static void insertCourse(String teacherNumber, String teacherName, List<String> scheduleList) {
-        String sql = "INSERT INTO Courses (teacherNumber, teacherName, selectedSchedule) VALUES (?, ?, ?)";
+    public static void insertTeacherCourse(String teacherNumber, String teacherName, String day, String hour, String courseName) {
+        String sql = "INSERT INTO TeacherCourse (teacherNumber, teacherName, day, hour, courseName) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, teacherNumber);
             pstmt.setString(2, teacherName);
-            pstmt.setString(3, String.join(", ", scheduleList));
+            pstmt.setString(3, day);
+            pstmt.setString(4, hour);
+            pstmt.setString(5, courseName);
             pstmt.executeUpdate();
-            System.out.println("Course successfully saved!");
+            System.out.println("Course inserted successfully!");
         } catch (SQLException e) {
-            System.out.println("Error saving course: " + e.getMessage());
+            System.out.println("Error inserting course: " + e.getMessage());
         }
+    }
+
+    public static List<String[]> getTeacherCourses() {
+        List<String[]> courses = new ArrayList<>();
+        String sql = "SELECT day, hour, courseName FROM TeacherCourse";
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                courses.add(new String[]{
+                    rs.getString("day"),
+                    rs.getString("hour"),
+                    rs.getString("courseName")
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching courses: " + e.getMessage());
+        }
+        return courses;
     }
 
     public static List<String[]> fetchCourses() {
@@ -370,7 +393,7 @@ public class SqlConnect {
         }
         return students;
     }
-    
+
     public static void updateMathNote(String number, String note) {
         String sql = "UPDATE Math SET note = ? WHERE number = ?";
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -402,7 +425,7 @@ public class SqlConnect {
         }
         return students;
     }
-    
+
     public static void createDifferantialTable() {
         String sql = "CREATE TABLE IF NOT EXISTS Differantial (\n"
                 + "    number TEXT PRIMARY KEY,\n"
@@ -419,6 +442,7 @@ public class SqlConnect {
             System.out.println("Error creating Differantial table: " + e.getMessage());
         }
     }
+
     public static void insertDifferantial(String number, String name, String studentClass, String note, String attendance) {
         String sql = "INSERT INTO Differantial (number, name, class, note, attendance) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -465,7 +489,7 @@ public class SqlConnect {
         }
         return students;
     }
-    
+
     public static void updateDifferantialNote(String number, String note) {
         String sql = "UPDATE Differantial SET note = ? WHERE number = ?";
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -497,7 +521,7 @@ public class SqlConnect {
         }
         return students;
     }
-    
+
     public static void createProgramingTable() {
         String sql = "CREATE TABLE IF NOT EXISTS Programing (\n"
                 + "    number TEXT PRIMARY KEY,\n"
@@ -514,6 +538,7 @@ public class SqlConnect {
             System.out.println("Error creating Programing table: " + e.getMessage());
         }
     }
+
     public static void insertPrograming(String number, String name, String studentClass, String note, String attendance) {
         String sql = "INSERT INTO Programing (number, name, class, note, attendance) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -560,7 +585,7 @@ public class SqlConnect {
         }
         return students;
     }
-    
+
     public static void updateProgramingNote(String number, String note) {
         String sql = "UPDATE Programing SET note = ? WHERE number = ?";
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -592,7 +617,7 @@ public class SqlConnect {
         }
         return students;
     }
-    
+
     public static void createNumericTable() {
         String sql = "CREATE TABLE IF NOT EXISTS Numeric (\n"
                 + "    number TEXT PRIMARY KEY,\n"
@@ -609,6 +634,7 @@ public class SqlConnect {
             System.out.println("Error creating Numeric table: " + e.getMessage());
         }
     }
+
     public static void insertNumeric(String number, String name, String studentClass, String note, String attendance) {
         String sql = "INSERT INTO Numeric (number, name, class, note, attendance) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -655,7 +681,7 @@ public class SqlConnect {
         }
         return students;
     }
-    
+
     public static void updateNumericNote(String number, String note) {
         String sql = "UPDATE Numeric SET note = ? WHERE number = ?";
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -704,6 +730,7 @@ public class SqlConnect {
             System.out.println("Error creating Numeric table: " + e.getMessage());
         }
     }
+
     public static void insertLinear(String number, String name, String studentClass, String note, String attendance) {
         String sql = "INSERT INTO Linear (number, name, class, note, attendance) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -750,7 +777,7 @@ public class SqlConnect {
         }
         return students;
     }
-    
+
     public static void updateLinearNote(String number, String note) {
         String sql = "UPDATE Linear SET note = ? WHERE number = ?";
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -782,7 +809,7 @@ public class SqlConnect {
         }
         return students;
     }
-    
+
     public static void create() {
         SqlConnect.createTable();
         SqlConnect.createTeacherTable();
