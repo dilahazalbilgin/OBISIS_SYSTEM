@@ -286,6 +286,12 @@ public class TeacherUser {
                     } else if (group.getSelection().equals(check2.getModel())) {
                         selectedAttendance = "NotContinous";
                     }
+                    
+                    int selectedRow = attedanceTable.getSelectedRow();
+                    if (selectedRow != -1) { 
+                        String selectedNumber = model.getValueAt(selectedRow, 0).toString();
+                        searchField.setText(selectedNumber); 
+                    }
 
                     if (searchNumber.isEmpty() || group.getSelection() == null) {
                         JOptionPane.showMessageDialog(teacherFrame, "Please fill in both the search number and note fields.");
@@ -472,6 +478,12 @@ public class TeacherUser {
                         JOptionPane.showMessageDialog(teacherFrame, "Please fill in both the search number and note fields.");
                         return;
                     }
+                    
+                    int selectedRow = noteTable.getSelectedRow();
+                    if (selectedRow != -1) { 
+                        String selectedNumber = model.getValueAt(selectedRow, 0).toString();
+                        searchField.setText(selectedNumber); 
+                    }
 
                     for (int i = 0; i < model.getRowCount(); i++) {
                         String tableNumber = model.getValueAt(i, 0).toString();
@@ -569,6 +581,12 @@ public class TeacherUser {
                     if (searchNumber.isEmpty() || newNote.isEmpty()) {
                         JOptionPane.showMessageDialog(teacherFrame, "Please fill in both the search number and note fields.");
                         return;
+                    }
+                    
+                    int selectedRow = noteTable.getSelectedRow();
+                    if (selectedRow != -1) { 
+                        String selectedNumber = model.getValueAt(selectedRow, 0).toString();
+                        searchField.setText(selectedNumber); 
                     }
 
                     for (int i = 0; i < model.getRowCount(); i++) {
