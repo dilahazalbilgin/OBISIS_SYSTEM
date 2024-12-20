@@ -173,6 +173,12 @@ public class TeacherUser {
                     String selectedAttendance = null;
                     boolean found = false;
 
+                    int selectedRow = attedanceTable.getSelectedRow();
+                    if (selectedRow != -1) { 
+                        String selectedNumber = model.getValueAt(selectedRow, 0).toString();
+                        searchField.setText(selectedNumber); 
+                    }
+
                     if (searchNumber.isEmpty() || group.getSelection() == null) {
                         JOptionPane.showMessageDialog(teacherFrame, "Please fill in both the search number and attendance fields.");
                         return;
