@@ -79,7 +79,7 @@ public class SqlConnect {
 
     public static void createConfirmedStudentLessonsTable() {
         String sql = "CREATE TABLE IF NOT EXISTS ConfirmedLessons (\n"
-                + "    number TEXT NOT NULLF,\n"
+                + "    number TEXT NOT NULL,\n"
                 + "    day TEXT NOT NULL,\n"
                 + "    hour TEXT NOT NULL,\n"
                 + "    lecture TEXT NOT NULL\n"
