@@ -79,7 +79,7 @@ public class SqlConnect {
 
     public static void createConfirmedStudentLessonsTable() {
         String sql = "CREATE TABLE IF NOT EXISTS ConfirmedLessons (\n"
-                + "    number TEXT PRIMARY KEY,\n"
+                + "    number TEXT NOT NULLF,\n"
                 + "    day TEXT NOT NULL,\n"
                 + "    hour TEXT NOT NULL,\n"
                 + "    lecture TEXT NOT NULL\n"
@@ -123,6 +123,59 @@ public class SqlConnect {
                 lessons.add(new Object[]{number, day, hour, lecture});
             }
             System.out.println("Confirmed lessons fetched successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error fetching confirmed lessons: " + e.getMessage());
+        }
+
+        return lessons;
+    }
+
+    public static void createConfirmedTeacherLessonsTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS ConfirmedTeacherLessons (\n"
+                + "    number TEXT NOT NULL,\n"
+                + "    day TEXT NOT NULL,\n"
+                + "    hour TEXT NOT NULL,\n"
+                + "    lecture TEXT NOT NULL\n"
+                + ");";
+
+        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("ConfirmedTeacherLessons table created successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error creating ConfirmedTeacherLessons table: " + e.getMessage());
+        }
+    }
+
+    public static void insertConfirmedTeacherLesson(String number, String day, String hour, String lecture) {
+        String sql = "INSERT INTO ConfirmedTeacherLessons(number, day, hour, lecture) VALUES(?, ?, ?, ?)";
+
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, number);
+            pstmt.setString(2, day);
+            pstmt.setString(3, hour);
+            pstmt.setString(4, lecture);
+            pstmt.executeUpdate();
+            System.out.println("Lesson inserted for student number: " + number);
+        } catch (SQLException e) {
+            System.out.println("Error inserting lesson: " + e.getMessage());
+        }
+    }
+
+    public static List<Object[]> getconfirmedTeacherLessons() {
+        List<Object[]> lessons = new ArrayList<>();
+        String sql = "SELECT number, day, hour, lecture FROM ConfirmedTeacherLessons";
+
+        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                String number = rs.getString("number");
+                String day = rs.getString("day");
+                String hour = rs.getString("hour");
+                String lecture = rs.getString("lecture");
+                lessons.add(new Object[]{number, day, hour, lecture});
+            }
+            System.out.println("ConfirmedTeacherLessons fetched successfully.");
         } catch (SQLException e) {
             System.out.println("Error fetching confirmed lessons: " + e.getMessage());
         }
@@ -261,73 +314,6 @@ public class SqlConnect {
         }
 
         return notices;
-    }
-
-    public static void createTeacherCourseTable() {
-        String sql = " CREATE TABLE IF NOT EXISTS TeacherCourse (\n"
-                + "    id INT AUTO_INCREMENT PRIMARY KEY,\n"
-                + "    teacherNumber VARCHAR(50),\n"
-                + "    teacherName VARCHAR(100),\n"
-                + "    day VARCHAR(50),\n"
-                + "    hour VARCHAR(50),\n"
-                + "    courseName VARCHAR(100)\n"
-                + ");";
-
-        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
-            System.out.println("TeacherCourse table created successfully.");
-        } catch (SQLException e) {
-            System.out.println("Error creating TeacherCourse table: " + e.getMessage());
-        }
-    }
-
-    public static void insertTeacherCourse(String teacherNumber, String teacherName, String day, String hour, String courseName) {
-        String sql = "INSERT INTO TeacherCourse (teacherNumber, teacherName, day, hour, courseName) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, teacherNumber);
-            pstmt.setString(2, teacherName);
-            pstmt.setString(3, day);
-            pstmt.setString(4, hour);
-            pstmt.setString(5, courseName);
-            pstmt.executeUpdate();
-            System.out.println("Course inserted successfully!");
-        } catch (SQLException e) {
-            System.out.println("Error inserting course: " + e.getMessage());
-        }
-    }
-
-    public static List<String[]> getTeacherCourses() {
-        List<String[]> courses = new ArrayList<>();
-        String sql = "SELECT day, hour, courseName FROM TeacherCourse";
-        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                courses.add(new String[]{
-                    rs.getString("day"),
-                    rs.getString("hour"),
-                    rs.getString("courseName")
-                });
-            }
-        } catch (SQLException e) {
-            System.out.println("Error fetching courses: " + e.getMessage());
-        }
-        return courses;
-    }
-
-    public static List<String[]> fetchCourses() {
-        List<String[]> courses = new ArrayList<>();
-        String sql = "SELECT teacherNumber, teacherName, selectedSchedule FROM Courses";
-        try (Connection conn = connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                String teacherNumber = rs.getString("teacherNumber");
-                String teacherName = rs.getString("teacherName");
-                String schedule = rs.getString("selectedSchedule");
-                courses.add(new String[]{teacherNumber, teacherName, schedule});
-            }
-        } catch (SQLException e) {
-            System.out.println("Error fetching courses: " + e.getMessage());
-        }
-        return courses;
     }
 
     public static void createMathTable() {
@@ -809,13 +795,13 @@ public class SqlConnect {
         }
         return students;
     }
-    
 
     public static void create() {
         SqlConnect.createTable();
         SqlConnect.createTeacherTable();
         SqlConnect.createPublicNoticeTable();
         SqlConnect.createConfirmedStudentLessonsTable();
+        SqlConnect.createConfirmedTeacherLessonsTable();
         SqlConnect.createPrivateNoticeTable();
         SqlConnect.createMathTable();
         SqlConnect.createDifferantialTable();

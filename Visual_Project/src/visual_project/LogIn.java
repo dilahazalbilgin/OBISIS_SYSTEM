@@ -55,7 +55,6 @@ public class LogIn {
             public void actionPerformed(ActionEvent e) {
                 String number = numbertext.getText();
                 String password = new String(passwordtext.getPassword());
-                String teacherName = "";
 
                 if (number.isEmpty() || password.isEmpty()) {
                     JOptionPane.showMessageDialog(logFrame, "Empty number or password");
@@ -64,11 +63,10 @@ public class LogIn {
                     if (validateTeacher(number, password, code)) {
                         String[] teacherInfo = getTeacherInfo(number, password, code);
                         if (teacherInfo != null) {
-                            String name = teacherInfo[0];
-                            String branch = teacherInfo[1];
+                            String name = teacherInfo[1];
+                            String branch = teacherInfo[2];
 
-                            logFrame.getContentPane().removeAll();
-                            new TeacherUser(logFrame, branch, name);
+                            new TeacherUser(logFrame, branch, name, number);
                             logFrame.revalidate();
                             logFrame.repaint();
                         } else {
@@ -183,14 +181,14 @@ public class LogIn {
 
     private String[] getTeacherInfo(String number, String password, int code) {
         try (Connection conn = SqlConnect.connect()) {
-            String query = "SELECT name, branch FROM TeacherUsers WHERE number = ? AND password = ? AND code = ?";
+            String query = "SELECT number ,name, branch FROM TeacherUsers WHERE number = ? AND password = ? AND code = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                 pstmt.setString(1, number);
                 pstmt.setString(2, password);
                 pstmt.setInt(3, code);
                 ResultSet rs = pstmt.executeQuery();
                 if (rs.next()) {
-                    return new String[]{rs.getString("name"), rs.getString("branch")};
+                    return new String[]{rs.getString("number"), rs.getString("name"), rs.getString("branch")};
                 }
             }
         } catch (SQLException e) {

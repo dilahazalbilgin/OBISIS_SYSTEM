@@ -78,18 +78,79 @@ public class StudentUser {
             studentFrame.repaint();
 
             String[] columnNames = {"Number", "Name", "Class", "Lecture", "Attendance"};
-            Object[][] data = {
-                {number, name, clases, "Math", "Continous"},
-                {number, name, clases, "Linear Algebra", "Continous"},
-                {number, name, clases, "Differential Equations", "NotContinous"},
-                {number, name, clases, "Programming", "NotContinous"},
-                {number, name, clases, "Numerical Analysis", "Continous"}
-            };
 
-            JTable table = new JTable(data, columnNames);
+            DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+            JTable table = new JTable(tableModel);
             JScrollPane scrollPane = new JScrollPane(table);
             scrollPane.setBounds(180, 80, 370, 380);
             studentFrame.add(scrollPane);
+
+            List<Object[]> students1 = SqlConnect.getLinearAttedanceStudentsByClass(clases, "Linear");
+            List<Object[]> students2 = SqlConnect.getDifferantialAttedanceStudentsByClass(clases, "Differantial");
+            List<Object[]> students3 = SqlConnect.getMathAttedanceStudentsByClass(clases, "Math");
+            List<Object[]> students4 = SqlConnect.getProgramingAttedanceStudentsByClass(clases, "Programing");
+            List<Object[]> students5 = SqlConnect.getNumericAttedanceStudentsByClass(clases, "Numeric");
+
+            for (Object[] student : students1) {
+                String studentNumber = (String) student[0];
+                if (studentNumber.equals(number)) {
+                    tableModel.addRow(new Object[]{
+                        student[0],
+                        student[1],
+                        clases,
+                        "linear",
+                        student[3]
+                    });
+                }
+            }
+            for (Object[] student : students2) {
+                String studentNumber = (String) student[0];
+                if (studentNumber.equals(number)) {
+                    tableModel.addRow(new Object[]{
+                        student[0],
+                        student[1],
+                        clases,
+                        "Differantial",
+                        student[3]
+                    });
+                }
+            }
+            for (Object[] student : students3) {
+                String studentNumber = (String) student[0];
+                if (studentNumber.equals(number)) {
+                    tableModel.addRow(new Object[]{
+                        student[0],
+                        student[1],
+                        clases,
+                        "Math",
+                        student[3]
+                    });
+                }
+            }
+            for (Object[] student : students4) {
+                String studentNumber = (String) student[0];
+                if (studentNumber.equals(number)) {
+                    tableModel.addRow(new Object[]{
+                        student[0],
+                        student[1],
+                        clases,
+                        "Numeric",
+                        student[3]
+                    });
+                }
+            }
+            for (Object[] student : students5) {
+                String studentNumber = (String) student[0];
+                if (studentNumber.equals(number)) {
+                    tableModel.addRow(new Object[]{
+                        student[0],
+                        student[1],
+                        clases,
+                        "linear",
+                        student[3]
+                    });
+                }
+            }
 
             studentFrame.revalidate();
             studentFrame.repaint();
@@ -108,12 +169,72 @@ public class StudentUser {
             noteScroll.setBounds(180, 80, 370, 380);
             studentFrame.add(noteScroll);
 
-            model.addRow(new Object[]{number, name, clases, "Math", "45"});
-            model.addRow(new Object[]{number, name, clases, "Linear", "73"});
-            model.addRow(new Object[]{number, name, clases, "Differantial", "30"});
-            model.addRow(new Object[]{number, name, clases, "Programing", "70"});
-            model.addRow(new Object[]{number, name, clases, "Numeric", "90"});
+            List<Object[]> students1 = SqlConnect.getLinearNoteStudentsByClass(clases, "Linear");
+            List<Object[]> students2 = SqlConnect.getDifferantialNoteStudentsByClass(clases, "Differantial");
+            List<Object[]> students3 = SqlConnect.getMathNoteStudentsByClass(clases, "Math");
+            List<Object[]> students4 = SqlConnect.getProgramingNoteStudentsByClass(clases, "Programing");
+            List<Object[]> students5 = SqlConnect.getNumericNoteStudentsByClass(clases, "Numeric");
 
+            for (Object[] student : students1) {
+                String studentNumber = (String) student[0];
+                if (studentNumber.equals(number)) {
+                    model.addRow(new Object[]{
+                        student[0],
+                        student[1],
+                        clases,
+                        "linear",
+                        student[3]
+                    });
+                }
+            }
+            for (Object[] student : students2) {
+                String studentNumber = (String) student[0];
+                if (studentNumber.equals(number)) {
+                    model.addRow(new Object[]{
+                        student[0],
+                        student[1],
+                        clases,
+                        "Differantial",
+                        student[3]
+                    });
+                }
+            }
+            for (Object[] student : students3) {
+                String studentNumber = (String) student[0];
+                if (studentNumber.equals(number)) {
+                    model.addRow(new Object[]{
+                        student[0],
+                        student[1],
+                        clases,
+                        "Math",
+                        student[3]
+                    });
+                }
+            }
+            for (Object[] student : students4) {
+                String studentNumber = (String) student[0];
+                if (studentNumber.equals(number)) {
+                    model.addRow(new Object[]{
+                        student[0],
+                        student[1],
+                        clases,
+                        "Numeric",
+                        student[3]
+                    });
+                }
+            }
+            for (Object[] student : students5) {
+                String studentNumber = (String) student[0];
+                if (studentNumber.equals(number)) {
+                    model.addRow(new Object[]{
+                        student[0],
+                        student[1],
+                        clases,
+                        "linear",
+                        student[3]
+                    });
+                }
+            }
             studentFrame.revalidate();
             studentFrame.repaint();
         });
@@ -267,7 +388,6 @@ public class StudentUser {
             for (Object[] lesson : studentLessons) {
                 model.addRow(lesson);
             }
-
             studentFrame.revalidate();
             studentFrame.repaint();
         });

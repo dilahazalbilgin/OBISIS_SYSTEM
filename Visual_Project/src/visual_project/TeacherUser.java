@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class TeacherUser {
 
-    public TeacherUser(JFrame teacherFrame, String branch, String name) {
+    public TeacherUser(JFrame teacherFrame, String branch, String name, String number) {
         teacherFrame.setTitle("Teacher Page");
         teacherFrame.getContentPane().removeAll();
 
@@ -762,7 +762,7 @@ public class TeacherUser {
             JLabel noticelbl = new JLabel("You must select three avaible day and hours!");
             noticelbl.setBounds(200, 150, 350, 30);
 
-            DefaultListModel model = new DefaultListModel();
+            DefaultListModel<String> model = new DefaultListModel<>();
             JList<String> list2 = new JList<>(model);
             list2.setBounds(200, 220, 300, 200);
             JButton selectbtn = new JButton("Select");
@@ -771,7 +771,11 @@ public class TeacherUser {
             selectbtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    model.addElement("Day: " + combo.getSelectedItem() + " Hour: " + list.getSelectedValue());
+                    String selectedDay = (String) combo.getSelectedItem();
+                    String selectedHour = list.getSelectedValue();
+                    if (selectedDay != null && selectedHour != null) {
+                        model.addElement("Day: " + selectedDay + " Hour: " + selectedHour);
+                    }
                 }
             });
             JButton deletebtn = new JButton("Delete");
@@ -779,53 +783,49 @@ public class TeacherUser {
             deletebtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (list2.isSelectionEmpty()) {
-                        JOptionPane.showMessageDialog(teacherFrame, "You must select an object");
+                    int selectedIndex = list2.getSelectedIndex();
+                    if (selectedIndex != -1) {
+                        model.remove(selectedIndex);
                     } else {
-                        int select = list2.getSelectedIndex();
-                        model.remove(select);
+                        JOptionPane.showMessageDialog(teacherFrame, "You must select an item to delete.");
                     }
                 }
             });
-
-            List<String> selectedLessons = new ArrayList<>();
 
             JButton approvebtn = new JButton("Approve");
             approvebtn.setBounds(450, 520, 100, 30);
             approvebtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String teacherNumber = "a";
-                    String teacherName = "b";
-
-                    if (model.getSize() >= 3) {
-                        StringBuilder listContent = new StringBuilder();
-                        selectedLessons.clear();
-                        for (int i = 0; i < model.getSize(); i++) {
-                            String[] lessonInfo = model.getElementAt(i).toString().split(" ");
-                            String day = lessonInfo[1];
-                            String hour = lessonInfo[3];
-                            String courseName = "Course";  // Ders adı
-                            selectedLessons.add(day + " " + hour);
-
-                            // Veritabanına ekle
-                            SqlConnect.insertTeacherCourse(teacherNumber, teacherName, day, hour, courseName);
-                            listContent.append("Day: ").append(day).append(" Hour: ").append(hour).append("\n");
+                    if (model.size() >= 3) {
+                        StringBuilder confirmationMessage = new StringBuilder("Do you want to approve this list?\n");
+                        List<String[]> approvedLessons = new ArrayList<>();
+                        for (int i = 0; i < model.size(); i++) {
+                            String[] details = model.get(i).split(" ");
+                            String day = details[1];
+                            String hour = details[3];
+                            approvedLessons.add(new String[]{day, hour, branch});
+                            confirmationMessage.append("Day: ").append(day).append(" Hour: ").append(hour).append("\n");
                         }
 
                         int response = JOptionPane.showConfirmDialog(
                                 teacherFrame,
-                                "Do you want to approve this list?\n" + listContent,
-                                "Alert",
+                                confirmationMessage.toString(),
+                                "Confirmation",
                                 JOptionPane.YES_NO_OPTION
                         );
 
                         if (response == JOptionPane.YES_OPTION) {
+                            for (String[] lesson : approvedLessons) {
+                                SqlConnect.insertConfirmedTeacherLesson(number, lesson[0], lesson[1], branch);
+                            }
                             JOptionPane.showMessageDialog(teacherFrame, "Program approved and saved!");
+                            model.clear();
                         }
                     } else {
                         JOptionPane.showMessageDialog(teacherFrame, "You must select at least 3 items before approving.");
                     }
+
                 }
             });
 
@@ -846,18 +846,20 @@ public class TeacherUser {
             teacherFrame.getContentPane().removeAll();
             teacherFrame.add(btnpanel);
             JOptionPane.showMessageDialog(teacherFrame, "You can see the program after the teacher and student approve it.");
-            DefaultTableModel model = new DefaultTableModel(new String[]{"Day", "Hour", "Lecture"}, 0);
+
+            DefaultTableModel model = new DefaultTableModel(new String[]{"Number", "Day", "Hour", "Lecture"}, 0);
             JTable noteTable = new JTable(model);
             JScrollPane noteScroll = new JScrollPane(noteTable);
             noteScroll.setBounds(180, 80, 370, 380);
             teacherFrame.add(noteScroll);
-            List<String[]> courses = SqlConnect.getTeacherCourses();
-            for (String[] course : courses) {
-                model.addRow(course);
+
+            List<Object[]> confirmedLessons = SqlConnect.getconfirmedTeacherLessons();
+            for (Object[] lesson : confirmedLessons) {
+                model.addRow(lesson);
             }
+
             teacherFrame.revalidate();
             teacherFrame.repaint();
-
         });
 
         JButton personalNoticebtn = new JButton("Personal Notice");
