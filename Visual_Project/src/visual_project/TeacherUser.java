@@ -10,6 +10,15 @@ import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import static visual_project.StudentUser.exportTableToPDF;
+import visual_project.SqlConnect;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
+import java.io.File;
+import javax.swing.table.DefaultTableModel;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TeacherUser {
 
@@ -153,8 +162,8 @@ public class TeacherUser {
 
             JRadioButton check1 = new JRadioButton("Continous");
             check1.setBounds(300, 520, 100, 30);
-            JRadioButton check2 = new JRadioButton("Noncontinous");
-            check2.setBounds(300, 550, 120, 30);
+            JRadioButton check2 = new JRadioButton("Notcontinous");
+            check2.setBounds(300, 550, 100, 30);
 
             ButtonGroup group = new ButtonGroup();
             group.add(check1);
@@ -174,9 +183,9 @@ public class TeacherUser {
                     boolean found = false;
 
                     int selectedRow = attedanceTable.getSelectedRow();
-                    if (selectedRow != -1) { 
+                    if (selectedRow != -1) {
                         String selectedNumber = model.getValueAt(selectedRow, 0).toString();
-                        searchField.setText(selectedNumber); 
+                        searchField.setText(selectedNumber);
                     }
 
                     if (searchNumber.isEmpty() || group.getSelection() == null) {
@@ -286,11 +295,11 @@ public class TeacherUser {
                     } else if (group.getSelection().equals(check2.getModel())) {
                         selectedAttendance = "NotContinous";
                     }
-                    
+
                     int selectedRow = attedanceTable.getSelectedRow();
-                    if (selectedRow != -1) { 
+                    if (selectedRow != -1) {
                         String selectedNumber = model.getValueAt(selectedRow, 0).toString();
-                        searchField.setText(selectedNumber); 
+                        searchField.setText(selectedNumber);
                     }
 
                     if (searchNumber.isEmpty() || group.getSelection() == null) {
@@ -373,6 +382,21 @@ public class TeacherUser {
                     if (!found) {
                         JOptionPane.showMessageDialog(teacherFrame, "No match found for number: " + searchNumber);
                     }
+                }
+            });
+
+            JButton exportPdfBtn = new JButton("Export to PDF");
+            exportPdfBtn.setBounds(400, 560, 110, 30);
+            teacherFrame.add(exportPdfBtn);
+
+            exportPdfBtn.addActionListener(event -> {
+                try {
+                    String selectedClass = (String) combo.getSelectedItem();
+                    exportTableToPDF(attedanceTable, "Attendance_Class" + selectedClass + ".pdf", selectedClass, branch);
+                    JOptionPane.showMessageDialog(teacherFrame, "PDF successfully created!");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(teacherFrame, "Error creating PDF: " + ex.getMessage());
                 }
             });
 
@@ -465,7 +489,7 @@ public class TeacherUser {
             teacherFrame.add(noteField);
 
             JButton addbtn = new JButton("Add");
-            addbtn.setBounds(290, 530, 80, 30);
+            addbtn.setBounds(190, 530, 80, 30);
             teacherFrame.add(addbtn);
             addbtn.addActionListener(new ActionListener() {
                 @Override
@@ -478,11 +502,11 @@ public class TeacherUser {
                         JOptionPane.showMessageDialog(teacherFrame, "Please fill in both the search number and note fields.");
                         return;
                     }
-                    
+
                     int selectedRow = noteTable.getSelectedRow();
-                    if (selectedRow != -1) { 
+                    if (selectedRow != -1) {
                         String selectedNumber = model.getValueAt(selectedRow, 0).toString();
-                        searchField.setText(selectedNumber); 
+                        searchField.setText(selectedNumber);
                     }
 
                     for (int i = 0; i < model.getRowCount(); i++) {
@@ -569,7 +593,7 @@ public class TeacherUser {
             });
 
             JButton updatebtn = new JButton("Update");
-            updatebtn.setBounds(390, 530, 80, 30);
+            updatebtn.setBounds(290, 530, 80, 30);
             teacherFrame.add(updatebtn);
             updatebtn.addActionListener(new ActionListener() {
                 @Override
@@ -582,11 +606,11 @@ public class TeacherUser {
                         JOptionPane.showMessageDialog(teacherFrame, "Please fill in both the search number and note fields.");
                         return;
                     }
-                    
+
                     int selectedRow = noteTable.getSelectedRow();
-                    if (selectedRow != -1) { 
+                    if (selectedRow != -1) {
                         String selectedNumber = model.getValueAt(selectedRow, 0).toString();
-                        searchField.setText(selectedNumber); 
+                        searchField.setText(selectedNumber);
                     }
 
                     for (int i = 0; i < model.getRowCount(); i++) {
@@ -666,7 +690,7 @@ public class TeacherUser {
             });
 
             JButton deletebtn = new JButton("Delete");
-            deletebtn.setBounds(490, 530, 80, 30);
+            deletebtn.setBounds(390, 530, 80, 30);
             teacherFrame.add(deletebtn);
             deletebtn.addActionListener(new ActionListener() {
                 @Override
@@ -755,7 +779,22 @@ public class TeacherUser {
                     }
                 }
             });
+            
+            JButton exportPdfBtn = new JButton("Export to PDF");
+            exportPdfBtn.setBounds(490, 530, 80, 30);
+            teacherFrame.add(exportPdfBtn);
 
+            exportPdfBtn.addActionListener(event -> {
+                try {
+                    String selectedClass = (String) combo.getSelectedItem();
+                    exportTableToPDF(noteTable, "Note_Class" + selectedClass + ".pdf", selectedClass, branch);
+                    JOptionPane.showMessageDialog(teacherFrame, "PDF successfully created!");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(teacherFrame, "Error creating PDF: " + ex.getMessage());
+                }
+            });
+            
             teacherFrame.revalidate();
             teacherFrame.repaint();
         });
@@ -872,8 +911,8 @@ public class TeacherUser {
             JOptionPane.showMessageDialog(teacherFrame, "You can see the program after the teacher and student approve it.");
 
             DefaultTableModel model = new DefaultTableModel(new String[]{"Number", "Day", "Hour", "Lecture"}, 0);
-            JTable noteTable = new JTable(model);
-            JScrollPane noteScroll = new JScrollPane(noteTable);
+            JTable programeTable = new JTable(model);
+            JScrollPane noteScroll = new JScrollPane(programeTable);
             noteScroll.setBounds(180, 80, 370, 380);
             teacherFrame.add(noteScroll);
 
@@ -881,6 +920,20 @@ public class TeacherUser {
             for (Object[] lesson : confirmedLessons) {
                 model.addRow(lesson);
             }
+            
+            JButton exportPdfBtn = new JButton("Export to PDF");
+            exportPdfBtn.setBounds(490, 530, 80, 30);
+            teacherFrame.add(exportPdfBtn);
+
+            exportPdfBtn.addActionListener(event -> {
+                try {
+                    exportTableToPDF(programeTable, "Programe.pdf", "", branch);
+                    JOptionPane.showMessageDialog(teacherFrame, "PDF successfully created!");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(teacherFrame, "Error creating PDF: " + ex.getMessage());
+                }
+            });
 
             teacherFrame.revalidate();
             teacherFrame.repaint();
@@ -946,6 +999,31 @@ public class TeacherUser {
         teacherFrame.add(btnpanel);
 
         teacherFrame.setVisible(true);
+    }
+
+    public void exportTableToPDF(JTable table, String fileName, String selectedClass, String branch) throws Exception {
+        Document document = new Document();
+        PdfWriter.getInstance(document, new FileOutputStream(fileName));
+        document.open();
+
+        document.add(new Paragraph("Class: " + selectedClass));
+        document.add(new Paragraph("Branch: " + branch));
+        document.add(new Paragraph("\n"));
+
+        PdfPTable pdfTable = new PdfPTable(table.getColumnCount());
+
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            pdfTable.addCell(table.getColumnName(i));
+        }
+
+        for (int rows = 0; rows < table.getRowCount(); rows++) {
+            for (int cols = 0; cols < table.getColumnCount(); cols++) {
+                pdfTable.addCell(table.getValueAt(rows, cols).toString());
+            }
+        }
+
+        document.add(pdfTable);
+        document.close();
     }
 
 }

@@ -2,17 +2,20 @@ package visual_project;
 
 import java.awt.Component;
 import java.awt.Font;
-import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import visual_project.SqlConnect;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
+import java.io.File;
+import javax.swing.table.DefaultTableModel;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentUser {
 
@@ -151,6 +154,19 @@ public class StudentUser {
                     });
                 }
             }
+            JButton exportPdfBtn = new JButton("Export to PDF");
+            exportPdfBtn.setBounds(420, 520, 120, 30);
+            studentFrame.add(exportPdfBtn);
+
+            exportPdfBtn.addActionListener(event -> {
+                try {
+                    exportTableToPDF(table, "StudentAttedance.pdf");
+                    JOptionPane.showMessageDialog(studentFrame, "PDF successfully created!");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(studentFrame, "Error creating PDF: " + ex.getMessage());
+                }
+            });
 
             studentFrame.revalidate();
             studentFrame.repaint();
@@ -235,6 +251,21 @@ public class StudentUser {
                     });
                 }
             }
+            
+            JButton exportPdfBtn = new JButton("Export to PDF");
+            exportPdfBtn.setBounds(420, 520, 120, 30);
+            studentFrame.add(exportPdfBtn);
+
+            exportPdfBtn.addActionListener(event -> {
+                try {
+                    exportTableToPDF(noteTable, "StudentNote.pdf");
+                    JOptionPane.showMessageDialog(studentFrame, "PDF successfully created!");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(studentFrame, "Error creating PDF: " + ex.getMessage());
+                }
+            });
+            
             studentFrame.revalidate();
             studentFrame.repaint();
         });
@@ -388,8 +419,28 @@ public class StudentUser {
             for (Object[] lesson : studentLessons) {
                 model.addRow(lesson);
             }
+
+            JButton exportPdfBtn = new JButton("Export to PDF");
+            exportPdfBtn.setBounds(420, 520, 120, 30);
+            studentFrame.add(exportPdfBtn);
+
+            exportPdfBtn.addActionListener(event -> {
+                try {
+                    exportTableToPDF(noteTable, "StudentProgram.pdf");
+                    JOptionPane.showMessageDialog(studentFrame, "PDF successfully created!");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(studentFrame, "Error creating PDF: " + ex.getMessage());
+                }
+            });
             studentFrame.revalidate();
             studentFrame.repaint();
+            File file = new File("StudentProgram.pdf");
+            if (file.exists()) {
+                System.out.println("PDF dosyası başarıyla oluşturuldu: " + file.getAbsolutePath());
+            } else {
+                System.out.println("PDF dosyası oluşturulamadı!");
+            }
         });
 
         JButton personalNoticebtn = new JButton("Personal Notice");
@@ -435,5 +486,28 @@ public class StudentUser {
             studentFrame.repaint();
         });
 
+    }
+
+    public static void exportTableToPDF(JTable table, String fileName) throws Exception {
+        Document document = new Document();
+        PdfWriter.getInstance(document, new FileOutputStream(fileName));
+        document.open();
+
+        document.add(new Paragraph("Student Program Report"));
+        document.add(new Paragraph(" ")); // Boşluk
+
+        PdfPTable pdfTable = new PdfPTable(table.getColumnCount());
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            pdfTable.addCell(new PdfPCell(new Phrase(table.getColumnName(i))));
+        }
+
+        for (int rows = 0; rows < table.getRowCount(); rows++) {
+            for (int cols = 0; cols < table.getColumnCount(); cols++) {
+                pdfTable.addCell(table.getValueAt(rows, cols).toString());
+            }
+        }
+
+        document.add(pdfTable);
+        document.close();
     }
 }
