@@ -1,20 +1,12 @@
 package visual_project;
 
-import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableModel;
-import static visual_project.StudentUser.exportTableToPDF;
-import visual_project.SqlConnect;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
-import java.io.File;
 import javax.swing.table.DefaultTableModel;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
